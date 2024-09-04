@@ -61,110 +61,110 @@ namespace OW {
 		switch (HeroID)
 		{
 		case eHero::HERO_REAPER:
-			return skCrypt(u8"ËÀÉñ").decrypt();
+			return skCrypt(u8"Ã‹Ã€Ã‰Ã±").decrypt();
 		case eHero::HERO_TRACER:
-			return skCrypt(u8"ÁÔ¿Õ").decrypt();
+			return skCrypt(u8"ÃÃ”Â¿Ã•").decrypt();
 		case eHero::HERO_MERCY:
-			return skCrypt(u8"ÌìÊ¹").decrypt();
+			return skCrypt(u8"ÃŒÃ¬ÃŠÂ¹").decrypt();
 		case eHero::HERO_HANJO:
-			return skCrypt(u8"°ë²Ø").decrypt();
+			return skCrypt(u8"Â°Ã«Â²Ã˜").decrypt();
 		case eHero::HERO_TORBJORN:
-			return skCrypt(u8"ÍÐ±È°º").decrypt();
+			return skCrypt(u8"ÃÃÂ±ÃˆÂ°Âº").decrypt();
 		case eHero::HERO_REINHARDT:
-			return skCrypt(u8"À³Òò¹þÌØ").decrypt();
+			return skCrypt(u8"Ã€Â³Ã’Ã²Â¹Ã¾ÃŒÃ˜").decrypt();
 		case eHero::HERO_PHARAH:
-			return skCrypt(u8"·¨ÀÏÖ®Ó¥").decrypt();
+			return skCrypt(u8"Â·Â¨Ã€ÃÃ–Â®Ã“Â¥").decrypt();
 		case eHero::HERO_WINSTON:
-			return skCrypt(u8"ÎÂË¹¶Ù").decrypt();
+			return skCrypt(u8"ÃŽÃ‚Ã‹Â¹Â¶Ã™").decrypt();
 		case eHero::HERO_WIDOWMAKER:
-			return skCrypt(u8"ºÚ°ÙºÏ").decrypt();
+			return skCrypt(u8"ÂºÃšÂ°Ã™ÂºÃ").decrypt();
 		case eHero::HERO_BASTION:
-			return skCrypt(u8"±¤ÀÝ").decrypt();
+			return skCrypt(u8"Â±Â¤Ã€Ã").decrypt();
 		case eHero::HERO_SYMMETRA:
-			return skCrypt(u8"ÖÈÐòÖ®¹â").decrypt();
+			return skCrypt(u8"Ã–ÃˆÃÃ²Ã–Â®Â¹Ã¢").decrypt();
 		case eHero::HERO_ZENYATTA:
-			return skCrypt(u8"ìøÑÅËþ").decrypt();
+			return skCrypt(u8"Ã¬Ã¸Ã‘Ã…Ã‹Ã¾").decrypt();
 		case eHero::HERO_GENJI:
-			return skCrypt(u8"Ô´ÊÏ").decrypt();
+			return skCrypt(u8"Ã”Â´ÃŠÃ").decrypt();
 		case eHero::HERO_ROADHOG:
-			return skCrypt(u8"Â·°Ô").decrypt();
+			return skCrypt(u8"Ã‚Â·Â°Ã”").decrypt();
 		case eHero::HERO_MCCREE:
-			return skCrypt(u8"Âó¿ËÀ×").decrypt();
+			return skCrypt(u8"Ã‚Ã³Â¿Ã‹Ã€Ã—").decrypt();
 		case eHero::HERO_JUNKRAT:
-			return skCrypt(u8"¿ñÊó").decrypt();
+			return skCrypt(u8"Â¿Ã±ÃŠÃ³").decrypt();
 		case eHero::HERO_ZARYA:
-			return skCrypt(u8"²éÀòæ«").decrypt();
+			return skCrypt(u8"Â²Ã©Ã€Ã²Ã¦Â«").decrypt();
 		case eHero::HERO_SOLDIER76:
-			return skCrypt(u8"Ê¿±ø76").decrypt();
+			return skCrypt(u8"ÃŠÂ¿Â±Ã¸76").decrypt();
 		case eHero::HERO_LUCIO:
-			return skCrypt(u8"Â¬Î÷°Â").decrypt();
+			return skCrypt(u8"Ã‚Â¬ÃŽÃ·Â°Ã‚").decrypt();
 		case eHero::HERO_DVA:
 			if (SDK->RPM<uint16_t>(LinkBase + 0xD4) != SDK->RPM<uint16_t>(LinkBase + 0xD8))
 				return skCrypt(u8"D.Va").decrypt();
 			else
-				return skCrypt(u8"¹þÄÈ").decrypt();
+				return skCrypt(u8"Â¹Ã¾Ã„Ãˆ").decrypt();
 		case eHero::HERO_VENTURE:
-			return skCrypt(u8"Â¬Î÷°").decrypt();
+			return skCrypt(u8"Ã‚Â¬ÃŽÃ·Â°").decrypt();
 		case eHero::HERO_MEI:
-			return skCrypt(u8"ÃÀ").decrypt();
+			return skCrypt(u8"ÃƒÃ€").decrypt();
 		case eHero::HERO_ANA:
-			return skCrypt(u8"°²ÄÈ").decrypt();
+			return skCrypt(u8"Â°Â²Ã„Ãˆ").decrypt();
 		case eHero::HERO_SOMBRA:
-			return skCrypt(u8"ºÚÓ°").decrypt();
+			return skCrypt(u8"ÂºÃšÃ“Â°").decrypt();
 		case eHero::HERO_ORISA:
-			return skCrypt(u8"°ÂÀöÉ¯").decrypt();
+			return skCrypt(u8"Â°Ã‚Ã€Ã¶Ã‰Â¯").decrypt();
 		case eHero::HERO_DOOMFIST:
-			return skCrypt(u8"Ä©ÈÕÌúÈ ").decrypt();
+			return skCrypt(u8"Ã„Â©ÃˆÃ•ÃŒÃºÃˆ ").decrypt();
 		case eHero::HERO_MOIRA:
-			return skCrypt(u8"ÄªÒÁÀ ").decrypt();
+			return skCrypt(u8"Ã„ÂªÃ’ÃÃ€ ").decrypt();
 		case eHero::HERO_BRIGITTE:
-			return skCrypt(u8"²¼Àï¼ªËþ").decrypt();
+			return skCrypt(u8"Â²Â¼Ã€Ã¯Â¼ÂªÃ‹Ã¾").decrypt();
 		case eHero::HERO_WRECKINGBALL:
-			return skCrypt(u8"ÆÆ»µÇò").decrypt();
+			return skCrypt(u8"Ã†Ã†Â»ÂµÃ‡Ã²").decrypt();
 		case eHero::HERO_SOJOURN:
-			return skCrypt(u8"Ë÷½Ü¶÷").decrypt();
+			return skCrypt(u8"Ã‹Ã·Â½ÃœÂ¶Ã·").decrypt();
 		case eHero::HERO_ASHE:
-			return skCrypt(u8"°¬Ê²").decrypt();
+			return skCrypt(u8"Â°Â¬ÃŠÂ²").decrypt();
 		case eHero::HERO_BAPTISTE:
-			return skCrypt(u8"°ÍµÙË¹ÌØ").decrypt();
+			return skCrypt(u8"Â°ÃÂµÃ™Ã‹Â¹ÃŒÃ˜").decrypt();
 		case eHero::HERO_KIRIKO:
-			return skCrypt(u8"Îí×Ó").decrypt();
+			return skCrypt(u8"ÃŽÃ­Ã—Ã“").decrypt();
 		case eHero::HERO_JUNKERQUEEN:
-			return skCrypt(u8"Ôü¿ÍÅ®Íõ").decrypt();
+			return skCrypt(u8"Ã”Ã¼Â¿ÃÃ…Â®ÃÃµ").decrypt();
 		case eHero::HERO_SIGMA:
-			return skCrypt(u8"Î÷¸ñÂê").decrypt();
+			return skCrypt(u8"ÃŽÃ·Â¸Ã±Ã‚Ãª").decrypt();
 		case eHero::HERO_ECHO:
-			return skCrypt(u8"»ØÉù").decrypt();
+			return skCrypt(u8"Â»Ã˜Ã‰Ã¹").decrypt();
 		case eHero::HERO_RAMATTRA:
-			return skCrypt(u8"À ÂêÉ²").decrypt();
+			return skCrypt(u8"Ã€ Ã‚ÃªÃ‰Â²").decrypt();
 		case eHero::HERO_TRAININGBOT1:
-			return skCrypt(u8"±ê×¼»úÆ÷ÈË").decrypt();
+			return skCrypt(u8"Â±ÃªÃ—Â¼Â»ÃºÃ†Ã·ÃˆÃ‹").decrypt();
 		case eHero::HERO_TRAININGBOT2:
-			return skCrypt(u8"ÖØ×°»úÆ÷ÈË").decrypt();
+			return skCrypt(u8"Ã–Ã˜Ã—Â°Â»ÃºÃ†Ã·ÃˆÃ‹").decrypt();
 		case eHero::HERO_TRAININGBOT3:
-			return skCrypt(u8"¾Ñ»÷»úÆ÷ÈË").decrypt();
+			return skCrypt(u8"Â¾Ã‘Â»Ã·Â»ÃºÃ†Ã·ÃˆÃ‹").decrypt();
 		case eHero::HERO_TRAININGBOT4:
-			return skCrypt(u8"ÓÑ·½»úÆ÷ÈË").decrypt();
+			return skCrypt(u8"Ã“Ã‘Â·Â½Â»ÃºÃ†Ã·ÃˆÃ‹").decrypt();
 		case eHero::HERO_TRAININGBOT5:
-			return skCrypt(u8"ÓÑ·½ÖØ×°»úÆ÷ÈË").decrypt();
+			return skCrypt(u8"Ã“Ã‘Â·Â½Ã–Ã˜Ã—Â°Â»ÃºÃ†Ã·ÃˆÃ‹").decrypt();
 		case eHero::HERO_TRAININGBOT6:
-			return skCrypt(u8"»ð¼ý»úÆ÷ÈË").decrypt();
+			return skCrypt(u8"Â»Ã°Â¼Ã½Â»ÃºÃ†Ã·ÃˆÃ‹").decrypt();
 		case eHero::HERO_TRAININGBOT7:
-			return skCrypt(u8"ÑµÁ·»úÆ÷ÈË").decrypt();
+			return skCrypt(u8"Ã‘ÂµÃÂ·Â»ÃºÃ†Ã·ÃˆÃ‹").decrypt();
 		case eHero::HERO_LIFEWEAVER:
-			return skCrypt(u8"ÉúÃüÖ®Ëó").decrypt();
+			return skCrypt(u8"Ã‰ÃºÃƒÃ¼Ã–Â®Ã‹Ã³").decrypt();
 		case eHero::TOBTERT:
-			return skCrypt(u8"ÅÚÌ¨").decrypt();
+			return skCrypt(u8"Ã…ÃšÃŒÂ¨").decrypt();
 		case eHero::SYMTERT:
-			return skCrypt(u8"ÉãÏñÍ·").decrypt();
+			return skCrypt(u8"Ã‰Ã£ÃÃ±ÃÂ·").decrypt();
 		case eHero::HERO_ILLARI:
-			return skCrypt(u8"ÒÁÀ Èñ").decrypt();
+			return skCrypt(u8"Ã’ÃÃ€ ÃˆÃ±").decrypt();
 		case eHero::HERO_MAUGA:
-			return skCrypt(u8"Ã«¼Ó").decrypt();
+			return skCrypt(u8"ÃƒÂ«Â¼Ã“").decrypt();
 		case eHero::Bob:
-			return skCrypt(u8"±«²ª").decrypt();
+			return skCrypt(u8"Â±Â«Â²Âª").decrypt();
 		default:
-			return skCrypt(u8"Î´Öª").decrypt();
+			return skCrypt(u8"ÃŽÂ´Ã–Âª").decrypt();
 		}
 
 	}
@@ -300,7 +300,7 @@ namespace OW {
 		*a4 = componentid / 0x3F;
 	}
 
-	inline uintptr_t DecryptComponent(uint64_t parent, uint8_t idx)
+		inline uintptr_t DecryptComponent(uint64_t parent, uint8_t idx)
 	{
 		__try {
 			if (parent) {
@@ -335,6 +335,7 @@ namespace OW {
 		__except (EXCEPTION_EXECUTE_HANDLER) {}
 		return NULL;
 	}
+ 
 
 
 	inline unsigned __int64 __fastcall DecryptVis(unsigned __int64 a1)
@@ -753,47 +754,6 @@ namespace OW {
 		__m128i v11; // xmm1
 
 		v2 = (SDK->dwGameBase + offset::OutlineFN);
-		v3 = v2 + 0x8;
-		v4 = 0i64;
-		v5 = SDK->RPM<uintptr_t>(SDK->dwGameBase + 0x3867900 + 8ull * (((uint8_t)a1 + 0x57) & 0x7F) //a1 +- offset
-			+ (((unsigned __int64)(a1 - 0x4DBBA6008B2945A9i64) >> 7) & 7)) ^ v2 ^ (a1 - 0x4DBBA6008B2945A9i64); // a1 +- outline key1
-		v6 = (v3 - v2 + 7) >> 3;
-		if (v2 > v3)
-			v6 = 0i64;
-		if (v6 >= 4)
-		{
-			v7 = v6 & 0xFFFFFFFFFFFFFFFCui64;
-			ZeroMemory(&v8, sizeof(v8));
-			ZeroMemory(&v9, sizeof(v9));
-			do
-			{
-				v4 += 4i64;
-				v8 = _mm_xor_si128(v8, _mm_loadu_si128((const __m128i*)v2));
-				v10 = _mm_loadu_si128((const __m128i*)(v2 + 0x10));
-				v2 += 0x20i64;
-				v9 = _mm_xor_si128(v9, v10);
-			} while (v4 < v7);
-			v11 = _mm_xor_si128(v8, v9);
-			auto addr = _mm_xor_si128(v11, _mm_srli_si128(v11, 8));
-			v5 = *(__int64*)&addr;
-		}
-		for (; v2 < v3; v2 += 8i64)
-			v5 ^= SDK->RPM<_QWORD>(v2);
-		return v5 ^ ~v3 ^ 0xB24459FF74D6BA57ui64; //outline key 2
-	}
-	uint64_t __fastcall decrypt_outline_xor(uint64_t a1)
-	{
-		unsigned __int64 v2 = 0; // rdi
-		unsigned __int64 v3 = 0; // r8
-		unsigned __int64 v4 = 0; // rax
-		__int64 v5 = 0;             // rbx
-		unsigned __int64 v6 = 0; // rcx
-		unsigned __int64 v7 = 0; // rcx
-		__m128i v8;                 // xmm1
-		__m128i v9;                 // xmm2
-		__m128i v10;             // xmm0
-		__m128i v11;             // xmm1
-		v2 = (SDK->dwGameBase + 0x7BBF72);
 		v3 = v2 + 0x8;
 		v4 = 0i64;
 		v5 = SDK->RPM<uintptr_t>(SDK->dwGameBase + 0x391D900 + 8ull * (((uint8_t)a1 + 0x16) & 0x7F)

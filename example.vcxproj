@@ -170,7 +170,6 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="auth.hpp" />
     <ClInclude Include="candy.h" />
     <ClInclude Include="Config.hpp" />
     <ClInclude Include="Drawable.hpp" />
@@ -214,9 +213,6 @@
     <ClInclude Include="tahoma.h" />
     <ClInclude Include="Target.hpp" />
     <ClInclude Include="Vector.hpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <Library Include="library_x64.lib" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="example.rc" />

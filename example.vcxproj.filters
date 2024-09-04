@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Header Files\auth">
-      <UniqueIdentifier>{de1a561c-edb6-4e62-a44a-ca45ef812d97}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Protection">
       <UniqueIdentifier>{587eab74-13d3-4764-9f32-49b7924744df}</UniqueIdentifier>
     </Filter>
@@ -68,9 +65,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="auth.hpp">
-      <Filter>Header Files\auth</Filter>
-    </ClInclude>
     <ClInclude Include="skStr.h">
       <Filter>Header Files\Protection</Filter>
     </ClInclude>
@@ -200,11 +194,6 @@
     <ClInclude Include="spoofcall.h">
       <Filter>Resource Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Library Include="library_x64.lib">
-      <Filter>Header Files\auth</Filter>
-    </Library>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="example.rc">

@@ -1,5 +1,4 @@
 #include <Windows.h>
-#include "auth.hpp"
 #include <string>
 #include "utils.hpp"
 #include "skStr.h"
@@ -25,7 +24,7 @@ void MainThread() {
 	std::cout << "Launch in Main Menu and go to Practice Range..\n";
 	while (!SDK->Initialize() || !SDK->GetGlobalKey())
 	{
-		std::cout << "Waiting Overwatch..\n";
+		std::cout << "Waiting Overwatch..\n";//t
 		Sleep(2000);
 	}
 
@@ -55,13 +54,12 @@ void MainThread() {
 int main()
 {
 
-	if (!OW::Config::loginornot) MainThread();
+	MainThread();
 	std::string consoleTitle = (std::string)skCrypt("Loader - Built at:  ") + compilation_date + " " + compilation_time;
 	SetConsoleTitleA(consoleTitle.c_str());
 	std::cout << skCrypt("\n\nConnecting to server..");
 	using namespace OW;
 
-	bool is_login = false;
 	std::cout << "Loading functions..\n";
 	MainThread();
 	Sleep(10000);

@@ -61,110 +61,110 @@ namespace OW {
 		switch (HeroID)
 		{
 		case eHero::HERO_REAPER:
-			return skCrypt(u8"Ã‹Ã€Ã‰Ã±").decrypt();
+			return skCrypt(u8"ËÀÉñ").decrypt();
 		case eHero::HERO_TRACER:
-			return skCrypt(u8"ÃÃ”Â¿Ã•").decrypt();
+			return skCrypt(u8"ÁÔ¿Õ").decrypt();
 		case eHero::HERO_MERCY:
-			return skCrypt(u8"ÃŒÃ¬ÃŠÂ¹").decrypt();
+			return skCrypt(u8"ÌìÊ¹").decrypt();
 		case eHero::HERO_HANJO:
-			return skCrypt(u8"Â°Ã«Â²Ã˜").decrypt();
+			return skCrypt(u8"°ë²Ø").decrypt();
 		case eHero::HERO_TORBJORN:
-			return skCrypt(u8"ÃÃÂ±ÃˆÂ°Âº").decrypt();
+			return skCrypt(u8"ÍĞ±È°º").decrypt();
 		case eHero::HERO_REINHARDT:
-			return skCrypt(u8"Ã€Â³Ã’Ã²Â¹Ã¾ÃŒÃ˜").decrypt();
+			return skCrypt(u8"À³Òò¹şÌØ").decrypt();
 		case eHero::HERO_PHARAH:
-			return skCrypt(u8"Â·Â¨Ã€ÃÃ–Â®Ã“Â¥").decrypt();
+			return skCrypt(u8"·¨ÀÏÖ®Ó¥").decrypt();
 		case eHero::HERO_WINSTON:
-			return skCrypt(u8"ÃÃ‚Ã‹Â¹Â¶Ã™").decrypt();
+			return skCrypt(u8"ÎÂË¹¶Ù").decrypt();
 		case eHero::HERO_WIDOWMAKER:
-			return skCrypt(u8"ÂºÃšÂ°Ã™ÂºÃ").decrypt();
+			return skCrypt(u8"ºÚ°ÙºÏ").decrypt();
 		case eHero::HERO_BASTION:
-			return skCrypt(u8"Â±Â¤Ã€Ã").decrypt();
+			return skCrypt(u8"±¤Àİ").decrypt();
 		case eHero::HERO_SYMMETRA:
-			return skCrypt(u8"Ã–ÃˆÃÃ²Ã–Â®Â¹Ã¢").decrypt();
+			return skCrypt(u8"ÖÈĞòÖ®¹â").decrypt();
 		case eHero::HERO_ZENYATTA:
-			return skCrypt(u8"Ã¬Ã¸Ã‘Ã…Ã‹Ã¾").decrypt();
+			return skCrypt(u8"ìøÑÅËş").decrypt();
 		case eHero::HERO_GENJI:
-			return skCrypt(u8"Ã”Â´ÃŠÃ").decrypt();
+			return skCrypt(u8"Ô´ÊÏ").decrypt();
 		case eHero::HERO_ROADHOG:
-			return skCrypt(u8"Ã‚Â·Â°Ã”").decrypt();
+			return skCrypt(u8"Â·°Ô").decrypt();
 		case eHero::HERO_MCCREE:
-			return skCrypt(u8"Ã‚Ã³Â¿Ã‹Ã€Ã—").decrypt();
+			return skCrypt(u8"Âó¿ËÀ×").decrypt();
 		case eHero::HERO_JUNKRAT:
-			return skCrypt(u8"Â¿Ã±ÃŠÃ³").decrypt();
+			return skCrypt(u8"¿ñÊó").decrypt();
 		case eHero::HERO_ZARYA:
-			return skCrypt(u8"Â²Ã©Ã€Ã²Ã¦Â«").decrypt();
+			return skCrypt(u8"²éÀòæ«").decrypt();
 		case eHero::HERO_SOLDIER76:
-			return skCrypt(u8"ÃŠÂ¿Â±Ã¸76").decrypt();
+			return skCrypt(u8"Ê¿±ø76").decrypt();
 		case eHero::HERO_LUCIO:
-			return skCrypt(u8"Ã‚Â¬ÃÃ·Â°Ã‚").decrypt();
+			return skCrypt(u8"Â¬Î÷°Â").decrypt();
 		case eHero::HERO_DVA:
 			if (SDK->RPM<uint16_t>(LinkBase + 0xD4) != SDK->RPM<uint16_t>(LinkBase + 0xD8))
 				return skCrypt(u8"D.Va").decrypt();
 			else
-				return skCrypt(u8"Â¹Ã¾Ã„Ãˆ").decrypt();
+				return skCrypt(u8"¹şÄÈ").decrypt();
 		case eHero::HERO_VENTURE:
-			return skCrypt(u8"Ã‚Â¬ÃÃ·Â°").decrypt();
+			return skCrypt(u8"Â¬Î÷°").decrypt();
 		case eHero::HERO_MEI:
-			return skCrypt(u8"ÃƒÃ€").decrypt();
+			return skCrypt(u8"ÃÀ").decrypt();
 		case eHero::HERO_ANA:
-			return skCrypt(u8"Â°Â²Ã„Ãˆ").decrypt();
+			return skCrypt(u8"°²ÄÈ").decrypt();
 		case eHero::HERO_SOMBRA:
-			return skCrypt(u8"ÂºÃšÃ“Â°").decrypt();
+			return skCrypt(u8"ºÚÓ°").decrypt();
 		case eHero::HERO_ORISA:
-			return skCrypt(u8"Â°Ã‚Ã€Ã¶Ã‰Â¯").decrypt();
+			return skCrypt(u8"°ÂÀöÉ¯").decrypt();
 		case eHero::HERO_DOOMFIST:
-			return skCrypt(u8"Ã„Â©ÃˆÃ•ÃŒÃºÃˆ ").decrypt();
+			return skCrypt(u8"Ä©ÈÕÌúÈ ").decrypt();
 		case eHero::HERO_MOIRA:
-			return skCrypt(u8"Ã„ÂªÃ’ÃÃ€ ").decrypt();
+			return skCrypt(u8"ÄªÒÁÀ ").decrypt();
 		case eHero::HERO_BRIGITTE:
-			return skCrypt(u8"Â²Â¼Ã€Ã¯Â¼ÂªÃ‹Ã¾").decrypt();
+			return skCrypt(u8"²¼Àï¼ªËş").decrypt();
 		case eHero::HERO_WRECKINGBALL:
-			return skCrypt(u8"Ã†Ã†Â»ÂµÃ‡Ã²").decrypt();
+			return skCrypt(u8"ÆÆ»µÇò").decrypt();
 		case eHero::HERO_SOJOURN:
-			return skCrypt(u8"Ã‹Ã·Â½ÃœÂ¶Ã·").decrypt();
+			return skCrypt(u8"Ë÷½Ü¶÷").decrypt();
 		case eHero::HERO_ASHE:
-			return skCrypt(u8"Â°Â¬ÃŠÂ²").decrypt();
+			return skCrypt(u8"°¬Ê²").decrypt();
 		case eHero::HERO_BAPTISTE:
-			return skCrypt(u8"Â°ÃÂµÃ™Ã‹Â¹ÃŒÃ˜").decrypt();
+			return skCrypt(u8"°ÍµÙË¹ÌØ").decrypt();
 		case eHero::HERO_KIRIKO:
-			return skCrypt(u8"ÃÃ­Ã—Ã“").decrypt();
+			return skCrypt(u8"Îí×Ó").decrypt();
 		case eHero::HERO_JUNKERQUEEN:
-			return skCrypt(u8"Ã”Ã¼Â¿ÃÃ…Â®ÃÃµ").decrypt();
+			return skCrypt(u8"Ôü¿ÍÅ®Íõ").decrypt();
 		case eHero::HERO_SIGMA:
-			return skCrypt(u8"ÃÃ·Â¸Ã±Ã‚Ãª").decrypt();
+			return skCrypt(u8"Î÷¸ñÂê").decrypt();
 		case eHero::HERO_ECHO:
-			return skCrypt(u8"Â»Ã˜Ã‰Ã¹").decrypt();
+			return skCrypt(u8"»ØÉù").decrypt();
 		case eHero::HERO_RAMATTRA:
-			return skCrypt(u8"Ã€ Ã‚ÃªÃ‰Â²").decrypt();
+			return skCrypt(u8"À ÂêÉ²").decrypt();
 		case eHero::HERO_TRAININGBOT1:
-			return skCrypt(u8"Â±ÃªÃ—Â¼Â»ÃºÃ†Ã·ÃˆÃ‹").decrypt();
+			return skCrypt(u8"±ê×¼»úÆ÷ÈË").decrypt();
 		case eHero::HERO_TRAININGBOT2:
-			return skCrypt(u8"Ã–Ã˜Ã—Â°Â»ÃºÃ†Ã·ÃˆÃ‹").decrypt();
+			return skCrypt(u8"ÖØ×°»úÆ÷ÈË").decrypt();
 		case eHero::HERO_TRAININGBOT3:
-			return skCrypt(u8"Â¾Ã‘Â»Ã·Â»ÃºÃ†Ã·ÃˆÃ‹").decrypt();
+			return skCrypt(u8"¾Ñ»÷»úÆ÷ÈË").decrypt();
 		case eHero::HERO_TRAININGBOT4:
-			return skCrypt(u8"Ã“Ã‘Â·Â½Â»ÃºÃ†Ã·ÃˆÃ‹").decrypt();
+			return skCrypt(u8"ÓÑ·½»úÆ÷ÈË").decrypt();
 		case eHero::HERO_TRAININGBOT5:
-			return skCrypt(u8"Ã“Ã‘Â·Â½Ã–Ã˜Ã—Â°Â»ÃºÃ†Ã·ÃˆÃ‹").decrypt();
+			return skCrypt(u8"ÓÑ·½ÖØ×°»úÆ÷ÈË").decrypt();
 		case eHero::HERO_TRAININGBOT6:
-			return skCrypt(u8"Â»Ã°Â¼Ã½Â»ÃºÃ†Ã·ÃˆÃ‹").decrypt();
+			return skCrypt(u8"»ğ¼ı»úÆ÷ÈË").decrypt();
 		case eHero::HERO_TRAININGBOT7:
-			return skCrypt(u8"Ã‘ÂµÃÂ·Â»ÃºÃ†Ã·ÃˆÃ‹").decrypt();
+			return skCrypt(u8"ÑµÁ·»úÆ÷ÈË").decrypt();
 		case eHero::HERO_LIFEWEAVER:
-			return skCrypt(u8"Ã‰ÃºÃƒÃ¼Ã–Â®Ã‹Ã³").decrypt();
+			return skCrypt(u8"ÉúÃüÖ®Ëó").decrypt();
 		case eHero::TOBTERT:
-			return skCrypt(u8"Ã…ÃšÃŒÂ¨").decrypt();
+			return skCrypt(u8"ÅÚÌ¨").decrypt();
 		case eHero::SYMTERT:
-			return skCrypt(u8"Ã‰Ã£ÃÃ±ÃÂ·").decrypt();
+			return skCrypt(u8"ÉãÏñÍ·").decrypt();
 		case eHero::HERO_ILLARI:
-			return skCrypt(u8"Ã’ÃÃ€ ÃˆÃ±").decrypt();
+			return skCrypt(u8"ÒÁÀ Èñ").decrypt();
 		case eHero::HERO_MAUGA:
-			return skCrypt(u8"ÃƒÂ«Â¼Ã“").decrypt();
+			return skCrypt(u8"Ã«¼Ó").decrypt();
 		case eHero::Bob:
-			return skCrypt(u8"Â±Â«Â²Âª").decrypt();
+			return skCrypt(u8"±«²ª").decrypt();
 		default:
-			return skCrypt(u8"ÃÂ´Ã–Âª").decrypt();
+			return skCrypt(u8"Î´Öª").decrypt();
 		}
 
 	}

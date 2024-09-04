@@ -61,16 +61,15 @@ namespace OW {
 		{
 			return spoof_call((PVOID)(this->dwGameBase + 0x1D21D0C), reinterpret_cast<uint64_t(__fastcall*)(uint64_t*, uint64_t*)>(this->dwGameBase + 0xB2DE0), a2, a1);
 		}
-		inline bool GetGlobalKey() {
+		inline bool GetGlobalKey()
+		{
 			static auto key_sig = (BYTE*)"\xFF\xFF\xFF\xFF\xFF\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x02\x00\x00\x00";
 			static auto key_mask = "xxxxxxxx????????????????????x???";
 			while (true) {
 				uint64_t Key = FindPatternExReg(key_sig, key_mask, 0x100000);
-				if (Key && Key < 0xf000000000000000 && RPM<uint64_t>(Key - 0xE8) > 0x1000000000000000 && RPM<uint64_t>(Key - 0x40) > 0x1000000000000000) {
-					GlobalKey1 = RPM<uint64_t>(Key - 0xE8);
-					GlobalKey2 = RPM<uint64_t>(Key - 0x40);
-					printf("GlobalKey1: 0x%llx\n", GlobalKey1);
-					printf("GlobalKey2: 0x%llx\n", GlobalKey2);
+				if (Key && Key < 0xf000000000000000 && RPM<uint64_t>(Key - 0x80) > 0x100000000000000 && RPM<uint64_t>(Key - 0x88) > 0x100000000000000) {
+					GlobalKey2 = RPM<uint64_t>(Key - 0x80);
+					GlobalKey1 = RPM<uint64_t>(Key - 0x88);
 					return true;
 				}
 				Sleep(1000);

@@ -67,9 +67,9 @@ namespace OW {
 			static auto key_mask = "xxxxxxxx????????????????????x???";
 			while (true) {
 				uint64_t Key = FindPatternExReg(key_sig, key_mask, 0x100000);
-				if (Key && Key < 0xf000000000000000 && RPM<uint64_t>(Key - 0x80) > 0x100000000000000 && RPM<uint64_t>(Key - 0x88) > 0x100000000000000) {
-					GlobalKey2 = RPM<uint64_t>(Key - 0x80);
-					GlobalKey1 = RPM<uint64_t>(Key - 0x88);
+				if (Key && Key < 0xf000000000000000 && RPM<uint64_t>(Key - 0xF0) > 0x100000000000000 && RPM<uint64_t>(Key - 0x40) > 0x100000000000000) {
+					GlobalKey2 = RPM<uint64_t>(Key - 0x40);
+					GlobalKey1 = RPM<uint64_t>(Key - 0xF0);
 					return true;
 				}
 				Sleep(1000);

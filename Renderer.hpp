@@ -421,7 +421,7 @@ namespace OW {
 		inline void DrawSKILL(const ImVec2& Pos, std::string skill) {
 			ImDrawList* Draw = ImGui::GetBackgroundDrawList();
 			ImVec2 InfoSize = ImGui::CalcTextSize(skill.c_str());
-			DrawStrokeText(ImVec2(Pos.x, Pos.y), ImGui::GetColorU32(ImVec4(1, 1, 1, 1)), skill.c_str(),19);
+			DrawStrokeText(ImVec2(Pos.x, Pos.y), ImGui::GetColorU32(ImVec4(1, 1, 1, 1)), skill.c_str(), 19);
 		}
 
 

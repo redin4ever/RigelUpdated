@@ -207,11 +207,11 @@
     <ClInclude Include="SDK.hpp" />
     <ClInclude Include="sfconfig.hpp" />
     <ClInclude Include="simhei.h" />
-    <ClInclude Include="skStr.h" />
     <ClInclude Include="spoofcall.h" />
     <ClInclude Include="sprite.hpp" />
     <ClInclude Include="tahoma.h" />
     <ClInclude Include="Target.hpp" />
+    <ClInclude Include="vampimg.h" />
     <ClInclude Include="Vector.hpp" />
   </ItemGroup>
   <ItemGroup>

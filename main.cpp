@@ -1,7 +1,6 @@
 #include <Windows.h>
 #include <string>
 #include "utils.hpp"
-#include "skStr.h"
 #include "includes.hpp"
 #include "SDK.hpp"
 #include "Overwatch.hpp"
@@ -10,21 +9,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-std::string tm_to_readable_time(tm ctx);
-static std::time_t string_to_timet(std::string timestamp);
-static std::tm timet_to_tm(time_t timestamp);
-const std::string compilation_date = (std::string)skCrypt(__DATE__);
-const std::string compilation_time = (std::string)skCrypt(__TIME__);
+
 
 
 
 
 void MainThread() {
 	using namespace OW;
-	std::cout << "Launch in Main Menu and go to Practice Range..\n";
-	while (!SDK->Initialize() || !SDK->GetGlobalKey())
+	std::cout << "Launch in Main Menu.\n";
+	while (!SDK->Initialize())
 	{
-		std::cout << "Waiting Overwatch..\n";//t
+		std::cout << "Waiting Overwatch..\n";//tg
 		Sleep(2000);
 	}
 
@@ -42,22 +37,23 @@ void MainThread() {
 
 	while (FindWindowA(skCrypt("TankWindowClass"), NULL))
 	{
-		auto viewMatrixVal = SDK->RPM<uint64_t>(SDK->dwGameBase + offset::Address_viewmatrix_base) ^ offset::offset_viewmatrix_xor_key;
+		auto viewMatrixVal = ((SDK->RPM<uint64_t>(SDK->dwGameBase + offset::Address_viewmatrix_base) + offset::offset_viewmatrix_xor_key) ^ offset::offset_viewmatrix_xor_key2) - offset::offset_viewmatrix_xor_key3;
 		viewMatrixVal = SDK->RPM<uint64_t>(viewMatrixVal + 0x20);
-		viewMatrixVal = SDK->RPM<uint64_t>(viewMatrixVal + 0x50);
+		viewMatrixVal = SDK->RPM<uint64_t>(viewMatrixVal + 0x58);
 		viewMatrix_xor_ptr = viewMatrixVal + 0x140;
 		auto view = SDK->RPM<uint64_t>(SDK->dwGameBase + offset::Address_viewmatrix_base_test) + offset::offset_viewmatrix_ptr;
 		viewMatrixPtr = view;
+
+		Sleep(100);
 	}
 }
 
 int main()
 {
-
 	MainThread();
-	std::string consoleTitle = (std::string)skCrypt("Loader - Built at:  ") + compilation_date + " " + compilation_time;
+	std::string consoleTitle = (std::string)("loader ow2");
 	SetConsoleTitleA(consoleTitle.c_str());
-	std::cout << skCrypt("\n\nConnecting to server..");
+	std::cout << ("\n\nConnecting to server..");
 	using namespace OW;
 
 	std::cout << "Loading functions..\n";
@@ -65,25 +61,9 @@ int main()
 	Sleep(10000);
 	exit(0);
 }
+//  v63 = (*(__int64 (__fastcall **)(unsigned __int64))(*(_QWORD *)(((qword_33EE770 + 0x77482B5E10C5793BLL) ^ 0xE17AD062B3DD5C8FuLL)
+//- 0x34F79E3A5B5276BELL)
+//+ 112LL))(((qword_33EE770 + 0x77482B5E10C5793BLL) ^ 0xE17AD062B3DD5C8FuLL) - 0x34F79E3A5B5276BELL);
 
-std::string tm_to_readable_time(tm ctx) {
-	char buffer[80];
 
-	strftime(buffer, sizeof(buffer), "%a %m/%d/%y %H:%M:%S %Z", &ctx);
 
-	return std::string(buffer);
-}
-
-static std::time_t string_to_timet(std::string timestamp) {
-	auto cv = strtol(timestamp.c_str(), NULL, 10);
-
-	return (time_t)cv;
-}
-
-static std::tm timet_to_tm(time_t timestamp) {
-	std::tm context;
-
-	localtime_s(&context, &timestamp);
-
-	return context;
-}

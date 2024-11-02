@@ -24,7 +24,7 @@
 #include "Fucking ImGui/imgui_impl_dx11.h"
 #include "Fucking ImGui/imgui_impl_win32.h"
 #include "Fucking ImGui/imgui_internal.h""
-#include "skStr.h"
+
 #include "Offsets.hpp"
 #include "Config.hpp"
 #include "Vector.hpp"
@@ -47,7 +47,7 @@ struct {\
 }\
 
 namespace OW {
-	auto viewMatrixVal = SDK->RPM<uint64_t>(SDK->dwGameBase + offset::Address_viewmatrix_base) ^ offset::offset_viewmatrix_xor_key;
+	auto viewMatrixVal = ((SDK->RPM<uint64_t>(SDK->dwGameBase + offset::Address_viewmatrix_base) + offset::offset_viewmatrix_xor_key) ^ offset::offset_viewmatrix_xor_key2) - offset::offset_viewmatrix_xor_key3;
 	Vector2 WindowSize = SDK->RPM<Vector2>(viewMatrixVal + 0x41C);
 	float WX = WindowSize.X;
 	float WY = WindowSize.Y;
@@ -89,11 +89,12 @@ namespace OW {
 
 	enum eHero : uint64_t
 	{
+		HERO_JUNO = 0x2E0000000000365,
 		HERO_REAPER = 0x2E0000000000002,
 		HERO_TRACER = 0x2E0000000000003,
 		HERO_MERCY = 0x2E0000000000004,
 		HERO_HANJO = 0x2E0000000000005,
-		HERO_TORBJORN = 0x2E0000000000006,
+		HERO_TORBJORN = 0x2E0000000000006,	
 		HERO_REINHARDT = 0x2E0000000000007,
 		HERO_PHARAH = 0x2E0000000000008,
 		HERO_WINSTON = 0x2E0000000000009,
@@ -278,7 +279,7 @@ namespace OW {
 			__try {
 				if (this->pos != Vector3(0, 0, 0) && this->PlayerHealth > 0)
 				{
-					uint64_t pBoneData = SDK->RPM<uint64_t>(this->VelocityBase + 0x8A0);
+					uint64_t pBoneData = SDK->RPM<uint64_t>(this->VelocityBase + 0x8B0);
 					if (pBoneData)
 					{
 						uint64_t bonesBase = SDK->RPM<uint64_t>(pBoneData + 0x20);
@@ -306,7 +307,7 @@ namespace OW {
 			__try {
 				if (this->pos != Vector3(0, 0, 0) && this->PlayerHealth > 0)
 				{
-					uint64_t pBoneData = SDK->RPM<uint64_t>(this->VelocityBase + 0x8A0);
+					uint64_t pBoneData = SDK->RPM<uint64_t>(this->VelocityBase + 0x8B0);
 					if (pBoneData)
 					{
 						uint64_t bonesBase = SDK->RPM<uint64_t>(pBoneData + 0x20);
@@ -373,7 +374,7 @@ namespace OW {
 			__try {
 				if (this->pos != Vector3(0, 0, 0) && this->PlayerHealth > 0)
 				{
-					uint64_t pBoneData = SDK->RPM<uint64_t>(this->VelocityBase + 0x8A0);
+					uint64_t pBoneData = SDK->RPM<uint64_t>(this->VelocityBase + 0x8B0);
 					if (pBoneData)
 					{
 						uint64_t bonesBase = SDK->RPM<uint64_t>(pBoneData + 0x20);

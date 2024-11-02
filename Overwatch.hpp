@@ -18,6 +18,9 @@
 #include <windows.h>
 #include <vfw.h>
 #include<ctime>
+#include <D3DX11tex.h>
+#include "vampimg.h"
+#pragma comment(lib, "D3DX11.lib")
 #pragma comment(lib,"vfw32.lib")
 
 time_t expiretime;
@@ -26,7 +29,11 @@ time_t nowtime;
 float WX, WY;
 
 std::mutex mutex;
-
+ID3D11ShaderResourceView* Image = nullptr;
+ID3D11ShaderResourceView* Image2 = nullptr;
+ID3D11ShaderResourceView* Image3 = nullptr;
+ID3D11ShaderResourceView* Image4 = nullptr;
+ID3D11ShaderResourceView* Image5 = nullptr;
 namespace OW {
 
 
@@ -282,7 +289,7 @@ namespace OW {
 				if (entity.AngleBase)
 				{
 					float dist = Vector3(viewMatrix_xor.get_location().x, viewMatrix_xor.get_location().y, viewMatrix_xor.get_location().z).DistTo(entity.head_pos);
-					if (dist <= 1 && GetHeroEngNames(entity.HeroID, entity.LinkBase) != skCrypt(u8"Unknown").decrypt()) {
+					if (dist <= 1 && GetHeroEngNames(entity.HeroID, entity.LinkBase) != (u8"Unknown")) {
 						entity.skillcd1 = readskillcd(entity.SkillBase + 0x40, 0, 0x189c);
 						entity.skillcd2 = readskillcd(entity.SkillBase + 0x40, 0, 0x1f89);
 						local_entity = entity;
@@ -297,7 +304,7 @@ namespace OW {
 						if (local_entity.GetTeam() == eTeam::TEAM_DEATHMATCH) entity.Team = false;
 					}
 				}
-				if (ComponentParent && LinkParent && GetHeroNames(entity.HeroID, entity.LinkBase) != skCrypt(u8"未知").decrypt())
+				if (ComponentParent && LinkParent && GetHeroNames(entity.HeroID, entity.LinkBase) != (u8"未知"))
 					tmp_entities.push_back(entity);
 			}
 			entities = tmp_entities;
@@ -309,7 +316,7 @@ namespace OW {
 	inline void viewmatrix_thread() {
 		__try {
 			while (true) {
-				auto viewMatrixVal = SDK->RPM<uint64_t>(SDK->dwGameBase + offset::Address_viewmatrix_base) ^ offset::offset_viewmatrix_xor_key;
+				auto viewMatrixVal = ((SDK->RPM<uint64_t>(SDK->dwGameBase + offset::Address_viewmatrix_base) + offset::offset_viewmatrix_xor_key) ^ offset::offset_viewmatrix_xor_key2) - offset::offset_viewmatrix_xor_key3;
 				Vector2 WindowSize = SDK->RPM<Vector2>(viewMatrixVal + 0x41C);
 
 				static RECT TempRect = { NULL };
@@ -351,14 +358,18 @@ namespace OW {
 					int num7 = (float)(1500 / (int)Height2);
 					float xpos = (Vec2_A.X + Vec2_B.X) / 2.f;
 					float ypos = Vec2_A.Y + Size / 5;
+
 					Size /= 5;
 					if (Size < 12) Size = 12;
 					if (Size > 16) Size = 16;
-					if(Config::healthbar) Render::DrawHealthBar(Vector2(Vec2_A.X+ width/2, Vec2_A.Y), -Height2, entity.PlayerHealth, entity.PlayerHealthMax);
-					if (Config::drawhealth)Render::DrawStrokeText(ImVec2(Vec2_A.X - width / 6, Vec2_A.Y), ImGui::GetColorU32(ImVec4(0, 0.9, 1, 1)), (skCrypt(u8"[血量：").decrypt() + std::to_string((int)entity.PlayerHealth)+ skCrypt(u8"]").decrypt()).c_str(), Size);
-					if (Config::ult)Render::DrawStrokeText(ImVec2(Vec2_A.X - width / 6, Vec2_A.Y + Height2 / 5), ImGui::GetColorU32(ImVec4(0, 0.9, 1, 1)), (skCrypt(u8"[终极技能：").decrypt() + std::to_string((int)entity.ultimate) + skCrypt(u8"]").decrypt()).c_str(), Size);
-					if (Config::dist)Render::DrawStrokeText(ImVec2(Vec2_B.X - width / 6,  Vec2_B.Y), ImGui::GetColorU32(ImVec4(0, 0.9, 1, 1)), (skCrypt(u8"[距离：").decrypt() + std::to_string((int)dist) + skCrypt(u8"]").decrypt()).c_str(), Size);
-					if (Config::name)Render::DrawStrokeText(ImVec2(Vec2_B.X - width / 6, Vec2_B.Y+ Height2/5), ImGui::GetColorU32(ImVec4(0, 0.9, 1, 1)), (skCrypt(u8"[名称：").decrypt() + GetHeroNames(entity.HeroID, entity.LinkBase) + skCrypt(u8"]").decrypt()).c_str(), Size);
+					float centerX = (Vec2_A.X + Vec2_B.X) / 2.f;
+					float centerY = (Vec2_A.Y + Vec2_B.Y) / 2.f;
+					float RealCenter = (centerY + centerX) / 2.f;
+					if(Config::healthbar) Render::DrawHealthBar(Vector2(Vec2_A.X+ width/4, Vec2_A.Y), RealCenter, entity.PlayerHealth, entity.PlayerHealthMax);
+					if (Config::drawhealth)Render::DrawStrokeText(ImVec2(Vec2_A.X - width / 6, Vec2_A.Y), ImGui::GetColorU32(ImVec4(0, 0.9, 1, 1)), ((u8"[血量：") + std::to_string((int)entity.PlayerHealth)+ (u8"]")).c_str(), Size);
+					if (Config::ult)Render::DrawStrokeText(ImVec2(Vec2_A.X - width / 6, Vec2_A.Y + Height2 / 5), ImGui::GetColorU32(ImVec4(0, 0.9, 1, 1)), ((u8"[终极技能：") + std::to_string((int)entity.ultimate) + (u8"]")).c_str(), Size);
+					if (Config::dist)Render::DrawStrokeText(ImVec2(Vec2_B.X - width / 6,  Vec2_B.Y), ImGui::GetColorU32(ImVec4(0, 0.9, 1, 1)), ((u8"[距离：") + std::to_string((int)dist) + (u8"]")).c_str(), Size);
+					if (Config::name)Render::DrawStrokeText(ImVec2(Vec2_B.X - width / 6, Vec2_B.Y+ Height2/5), ImGui::GetColorU32(ImVec4(0, 0.9, 1, 1)), ((u8"[名称：") + GetHeroNames(entity.HeroID, entity.LinkBase) + (u8"]")).c_str(), Size);
 				}
 			}
 		}
@@ -374,13 +385,13 @@ namespace OW {
 					float ypos = WY + i;
 					std::string skillstring;
 					float ult = entity.ultimate;
-					skillstring = skCrypt(u8"Enemy:").decrypt() + heroname + skCrypt(u8" Ult:").decrypt() + std::to_string((int)ult);
+					skillstring = (u8"Enemy:") + heroname + (u8" Ult:") + std::to_string((int)ult);
 					Render::DrawSKILL(ImVec2(70, 30 + i), skillstring);
 					i += 20;
 				}
 				else if (entity.Team && (entity.HeroID == 0x16dd || entity.HeroID == 0x16ee || entity.HeroID == 0x16bb)) {
 					std::string skillstring;
-					skillstring = skCrypt(u8"Enemy Entity:").decrypt() + heroname + skCrypt(u8" HP：").decrypt() + std::to_string((int)entity.PlayerHealth) + skCrypt(u8"/").decrypt() + std::to_string((int)entity.MaxHealth);
+					skillstring = (u8"Enemy Entity:") + heroname + (u8" HP：") + std::to_string((int)entity.PlayerHealth) + (u8"/") + std::to_string((int)entity.MaxHealth);
 					Render::DrawSKILL(ImVec2(70, 30 + i), skillstring);
 					i += 20;
 				}
@@ -393,13 +404,13 @@ namespace OW {
 					float ypos = WY + i;
 					std::string skillstring;
 					float ult = entity.ultimate;
-					skillstring = skCrypt(u8"Ally:").decrypt() + heroname + skCrypt(u8" Ult:").decrypt() + std::to_string((int)ult);
+					skillstring = (u8"Ally:") + heroname + (u8" Ult:") + std::to_string((int)ult);
 					Render::DrawSKILL(ImVec2(70, 30 + i), skillstring);
 					i += 20;
 				}
 				else if (!entity.Team && (entity.HeroID == 0x16dd || entity.HeroID == 0x16ee || entity.HeroID == 0x16bb)) {
 					std::string skillstring;
-					skillstring = skCrypt(u8"Ally entity:").decrypt() + heroname + skCrypt(u8" HP:").decrypt() + std::to_string((int)entity.PlayerHealth) + skCrypt(u8"/").decrypt() + std::to_string((int)entity.MaxHealth);
+					skillstring = (u8"Ally entity:") + heroname + (u8" HP:") + std::to_string((int)entity.PlayerHealth) + (u8"/") + std::to_string((int)entity.MaxHealth);
 					Render::DrawSKILL(ImVec2(70, 30 + i), skillstring);
 					i += 20;
 				}
@@ -580,8 +591,8 @@ namespace OW {
 				if (!viewMatrix.WorldToScreen(Vector3(hppack.POS.x + 0.5f, hppack.POS.y + 1.f, hppack.POS.z + 0.5f), &resultvec8, Vector2(WX, WY)))
 					continue;
 				float dist = Vector3(viewMatrix_xor.get_location().x, viewMatrix_xor.get_location().y, viewMatrix_xor.get_location().z).DistTo(Vector3(hppack.POS.x, hppack.POS.y, hppack.POS.z));
-				Render::DrawStrokeText(ImVec2(stringresult.X - 5.f, stringresult.Y - 8.f), ImGui::GetColorU32(ImVec4(1, 0, 0.2f, 1)), (skCrypt(u8"HP PACK").decrypt()), 16.f);
-				Render::DrawStrokeText(ImVec2(stringresult.X - 5.f, stringresult.Y + 8.f), ImGui::GetColorU32(ImVec4(1, 0, 0.2f, 1)), (skCrypt(u8"[DIST：").decrypt() + std::to_string((int)dist) + skCrypt(u8"]").decrypt()).c_str(), 16.f);
+				Render::DrawStrokeText(ImVec2(stringresult.X - 5.f, stringresult.Y - 8.f), ImGui::GetColorU32(ImVec4(1, 0, 0.2f, 1)), ((u8"HP PACK")), 16.f);
+				Render::DrawStrokeText(ImVec2(stringresult.X - 5.f, stringresult.Y + 8.f), ImGui::GetColorU32(ImVec4(1, 0, 0.2f, 1)), ((u8"[DIST：") + std::to_string((int)dist) + (u8"]")).c_str(), 16.f);
 				Render::DrawLine(resultvec1, resultvec2, Color(102, 153, 255, 100), 2.f);
 				Render::DrawLine(resultvec1, resultvec3, Color(102, 153, 255, 100), 2.f);
 				Render::DrawLine(resultvec2, resultvec4, Color(102, 153, 255, 100), 2.f);
@@ -702,15 +713,15 @@ namespace OW {
 						Size /= 2;
 						if (Size < 16) Size = 16;
 						if (Size > 20) Size = 20;
-						if (Config::drawbattletag) Render::DrawStrokeText(ImVec2(Vec2_A.X - width / 6, Vec2_B.Y - Size), ImGui::GetColorU32(ImVec4(0, 0.9, 1, 1)), (skCrypt(u8"[ID：").decrypt() + entity.battletag + skCrypt(u8"]").decrypt()).c_str(), Size);
-						if (Config::healthbar) Render::DrawSeerLikeHealth(Vec2_B.X, Vec2_B.Y - 30.f, (int)(1.25f * entity.ultimate), 125, (int)entity.PlayerHealth, (int)entity.PlayerHealthMax);
-
-						if (Config::drawhealth)Render::DrawStrokeText(ImVec2(Vec2_A.X - width / 6, Vec2_A.Y), ImGui::GetColorU32(ImVec4(0.9, 0.9, 1, 1)), (skCrypt(u8"[HP：").decrypt() + std::to_string((int)entity.PlayerHealth) + skCrypt(u8"]").decrypt()).c_str(), Size);
-						if (Config::ult)Render::DrawStrokeText(ImVec2(Vec2_A.X - width / 6, Vec2_A.Y + Size), ImGui::GetColorU32(ImVec4(0.9, 0.9, 1, 1)), (skCrypt(u8"[ULT：").decrypt() + std::to_string((int)entity.ultimate) + skCrypt(u8"]").decrypt()).c_str(), Size);
-						if (Config::dist)Render::DrawStrokeText(ImVec2(Vec2_B.X - width / 6, Vec2_B.Y), ImGui::GetColorU32(ImVec4(0.9, 0.9, 1, 1)), (skCrypt(u8"[DIST：").decrypt() + std::to_string((int)dist) + skCrypt(u8"]").decrypt()).c_str(), Size);
-						if (Config::name)Render::DrawStrokeText(ImVec2(Vec2_B.X - width / 6, Vec2_B.Y + Size), ImGui::GetColorU32(ImVec4(0.9, 0.9, 1, 1)), (skCrypt(u8"[NAME：").decrypt() + GetHeroEngNames(entity.HeroID, entity.LinkBase) + skCrypt(u8"]").decrypt()).c_str(), Size);
+						if (Config::drawbattletag) Render::DrawStrokeText(ImVec2(Vec2_A.X - width / 6, Vec2_B.Y - Size), ImGui::GetColorU32(ImVec4(0, 0.9, 1, 1)), ((u8"[ID：") + entity.battletag + (u8"]")).c_str(), Size);
+						if (Config::healthbar) Render::DrawSeerLikeHealth(Vec2_B.X, Vec2_B.Y - 20.f, (int)(1.25f * entity.ultimate), 125, (int)entity.PlayerHealth, (int)entity.PlayerHealthMax);
+						//if(Config::healthbar) Render::DrawHealthBar(Vector2(Vec2_A.X, Vec2_A.Y), Height2/3, entity.PlayerHealth, entity.PlayerHealthMax);
+						if (Config::drawhealth)Render::DrawStrokeText(ImVec2(Vec2_A.X - width / 6, Vec2_A.Y), ImGui::GetColorU32(ImVec4(0.9, 0.9, 1, 1)), ((u8"[HP：") + std::to_string((int)entity.PlayerHealth) + (u8"]")).c_str(), Size);
+						if (Config::ult)Render::DrawStrokeText(ImVec2(Vec2_A.X - width / 6, Vec2_A.Y + Size), ImGui::GetColorU32(ImVec4(0.9, 0.9, 1, 1)), ((u8"[ULT：") + std::to_string((int)entity.ultimate) + (u8"]")).c_str(), Size);
+						if (Config::dist)Render::DrawStrokeText(ImVec2(Vec2_B.X - width / 6, Vec2_B.Y), ImGui::GetColorU32(ImVec4(0.9, 0.9, 1, 1)), ((u8"[DIST：") + std::to_string((int)dist) + (u8"]")).c_str(), Size);
+						if (Config::name)Render::DrawStrokeText(ImVec2(Vec2_B.X - width / 6, Vec2_B.Y + Size), ImGui::GetColorU32(ImVec4(0.9, 0.9, 1, 1)), ((u8"[NAME：") + GetHeroEngNames(entity.HeroID, entity.LinkBase) + (u8"]")).c_str(), Size);
 					}
-				}
+				} 
 				if (Config::draw_skel) {
 					if (entity.Alive && entity.Team && local_entity.PlayerHealth > 0 && entity.HeroID != 0x16dd) {
 						espBone a = entity.getBoneList(entity.GetSkel());
@@ -841,6 +852,7 @@ namespace OW {
 						Render::DrawCorneredBox(Vec2_A.X - (width / 2) - 1, Vec2_A.Y - (height / 5) - 1, width + 2, height + 12, ImGui::GetColorU32(Config::EnemyCol));
 						Render::DrawFilledRect(Vec2_A.X - (width / 2) - 1, Vec2_A.Y - (height / 5) - 1, width + 2, height + 12, ImColor(0, 0, 0, 60));
 					}
+
 				}
 				if (Config::drawbox3d) {
 					if (entity.Alive && entity.Team && local_entity.PlayerHealth > 0 && entity.HeroID != 0x16dd)
@@ -986,11 +998,11 @@ namespace OW {
 			std::chrono::system_clock::time_point a = std::chrono::system_clock::now();
 			std::chrono::system_clock::time_point b = std::chrono::system_clock::now();
 
-			HWND tWnd = FindWindowA(skCrypt("TankWindowClass"), NULL);
+			HWND tWnd = FindWindowA(("TankWindowClass"), NULL);
 
-			WNDCLASSEX wc = { sizeof(WNDCLASSEX), CS_CLASSDC, WndProc, 0L, 0L, GetModuleHandle(NULL), NULL, NULL, NULL, NULL, skCrypt("ImperialUltra"), NULL };
+			WNDCLASSEX wc = { sizeof(WNDCLASSEX), CS_CLASSDC, WndProc, 0L, 0L, GetModuleHandle(NULL), NULL, NULL, NULL, NULL, ("TestyCheat"), NULL };
 			RegisterClassEx(&wc);
-			hwnd = CreateWindow(wc.lpszClassName, skCrypt("ImperialUltra"), WS_POPUP, 0, 0, 0, 0, NULL, NULL, wc.hInstance, NULL);
+			hwnd = CreateWindow(wc.lpszClassName, ("TestyCheat"), WS_POPUP, 0, 0, 0, 0, NULL, NULL, wc.hInstance, NULL);
 			if (!CreateDeviceD3D(hwnd))
 			{
 				CleanupDeviceD3D();
@@ -1021,9 +1033,33 @@ namespace OW {
 				ico = io.Fonts->AddFontFromMemoryTTF(&icon, sizeof icon, 65.f, NULL, io.Fonts->GetGlyphRangesCyrillic());
 			if(ico234==nullptr)
 				ico234 = io.Fonts->AddFontFromMemoryTTF((void*)tahoma, sizeof(tahoma), 65.f, NULL, io.Fonts->GetGlyphRangesCyrillic());
-			ImCandy::Theme_Blender();
+			ImCandy::Theme_Cyberpunk();
+
+			D3DX11_IMAGE_LOAD_INFO info;
+			ID3DX11ThreadPump* pump{ nullptr };
+			D3DX11CreateShaderResourceViewFromMemory(g_pd3dDevice, CompChip, sizeof(CompChip), &info,
+				pump, &Image, 0);
+			ImGui_ImplWin32_Init(tWnd);
+			ImGui_ImplDX11_Init(g_pd3dDevice, g_pd3dDeviceContext);
 
 
+			D3DX11CreateShaderResourceViewFromMemory(g_pd3dDevice, ViewMonitor, sizeof(ViewMonitor), &info,
+				pump, &Image2, 0);
+			ImGui_ImplWin32_Init(tWnd);
+			ImGui_ImplDX11_Init(g_pd3dDevice, g_pd3dDeviceContext);
+
+			D3DX11CreateShaderResourceViewFromMemory(g_pd3dDevice, Vamp, sizeof(Vamp), &info,
+				pump, &Image3, 0);
+			ImGui_ImplWin32_Init(tWnd);
+			ImGui_ImplDX11_Init(g_pd3dDevice, g_pd3dDeviceContext);
+
+			D3DX11CreateShaderResourceViewFromMemory(g_pd3dDevice, PadlockUser, sizeof(PadlockUser), &info,
+				pump, &Image4, 0);
+			ImGui_ImplWin32_Init(tWnd);
+			ImGui_ImplDX11_Init(g_pd3dDevice, g_pd3dDeviceContext);
+
+			D3DX11CreateShaderResourceViewFromMemory(g_pd3dDevice, Programming, sizeof(Programming), &info,
+				pump, &Image5, 0);
 			ImGui_ImplWin32_Init(tWnd);
 			ImGui_ImplDX11_Init(g_pd3dDevice, g_pd3dDeviceContext);
 
@@ -1061,7 +1097,7 @@ namespace OW {
 			colorc5 = 120.f;
 			float jj15 = 1, jj25 = 0, jj35 = 1;
 			DEVMODE dm;
-			while (FindWindowA(skCrypt("TankWindowClass"), NULL))
+			while (FindWindowA(("TankWindowClass"), NULL))
 			{
 				
 				dm.dmSize = sizeof(DEVMODE);
@@ -1121,7 +1157,7 @@ namespace OW {
 					ImGui::SetNextWindowPos(ImVec2(OW::WX / 2.f - 550.f, OW::WY / 2.f - 425.f));
 					ImGui::SetNextWindowSize(ImVec2(1100, 850));
 					bool _visible = true;
-					if (ImGui::Begin(skCrypt(u8"GET A Life"), &_visible, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoTitleBar)) {
+					if (ImGui::Begin((u8"ow2 test"), &_visible, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoTitleBar)) {
 						ImGui::Spacing();
 						ImGui::PushFont(ico);
 						ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(colora / 255.f, colorb / 255.f, colorc / 255.f, 255.f / 255.f));
@@ -1146,34 +1182,43 @@ namespace OW {
 						ImGui::SameLine();
 						ImGui::Spacing();
 						ImGui::SameLine();
-						ImGui::Text(skCrypt("                    GET A Life"));
+						ImGui::Text(("                    ow2 test"));
 						ImGui::PopStyleColor();
 						ImGui::PopFont();
-						ImGui::PushFont(ico);
+						ImGui::PushFont(ico);// from here it makes text into img
 						ImGui::Spacing();
 						ImGui::Spacing();
 						ImGui::Spacing();
 						ImGui::Spacing();
 						ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(colora / 255.f, colorb / 255.f, colorc / 255.f, 255.f / 255.f));
-						ImGui::Text(skCrypt("    Q"));
+						ImGui::Text("   ");
+						ImGui::SameLine();
+						ImGui::Image((PVOID)Image, ImVec2(60, 60)); // replace with computer chip
+						ImGui::SameLine();
+						ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(colora / 255.f, colorb / 255.f, colorc / 255.f, 255.f / 255.f));
+						ImGui::Text("       ");
 						ImGui::PopStyleColor();
-						if (jj1 == 0) colora-=0.7;
-						else colora+=0.7;
+						if (jj1 == 0) colora -= 0.7;
+						else colora += 0.7;
 						if (colora <= 0) jj1 = 1;
 						else if (colora >= 255) jj1 = 0;
 
-						if (jj2 == 0) colorb-= 0.7;
-						else colorb+= 0.7;
+						if (jj2 == 0) colorb -= 0.7;
+						else colorb += 0.7;
 						if (colorb <= 0) jj2 = 1;
 						else if (colorb >= 255) jj2 = 0;
 
-						if (jj3 == 0) colorc-= 0.7;
-						else colorc+= 0.7;
+						if (jj3 == 0) colorc -= 0.7;
+						else colorc += 0.7;
 						if (colorc <= 0) jj3 = 1;
 						else if (colorc >= 255) jj3 = 0;
+						ImGui::SameLine(); // Ensures all images and text are on the same line
+
+						ImGui::SameLine(); // Keep Image2 and text on the same line
+						ImGui::Image((PVOID)Image2, ImVec2(60, 60)); // replace with monitor
 						ImGui::SameLine();
 						ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(colora2 / 255.f, colorb2 / 255.f, colorc2 / 255.f, 255.f / 255.f));
-						ImGui::Text(skCrypt("       I"));
+						ImGui::Text("       ");
 						ImGui::PopStyleColor();
 						if (jj12 == 0) colora2 -= 0.7;
 						else colora2 += 0.7;
@@ -1189,9 +1234,12 @@ namespace OW {
 						else colorc2 += 0.7;
 						if (colorc2 <= 0) jj32 = 1;
 						else if (colorc2 >= 255) jj32 = 0;
+
+						ImGui::SameLine();
+						ImGui::Image((PVOID)Image3, ImVec2(60, 60)); // replace with fangs
 						ImGui::SameLine();
 						ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(colora3 / 255.f, colorb3 / 255.f, colorc3 / 255.f, 255.f / 255.f));
-						ImGui::Text(skCrypt("        N"));
+						ImGui::Text("       ");
 						ImGui::PopStyleColor();
 						if (jj13 == 0) colora3 -= 0.7;
 						else colora3 += 0.7;
@@ -1207,9 +1255,12 @@ namespace OW {
 						else colorc3 += 0.7;
 						if (colorc3 <= 0) jj33 = 1;
 						else if (colorc3 >= 255) jj33 = 0;
+
+						ImGui::SameLine();
+						ImGui::Image((PVOID)Image4, ImVec2(60, 60)); // replace with padlock user
 						ImGui::SameLine();
 						ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(colora4 / 255.f, colorb4 / 255.f, colorc4 / 255.f, 255.f / 255.f));
-						ImGui::Text(skCrypt("        O"));
+						ImGui::Text("       ");
 						ImGui::PopStyleColor();
 						if (jj14 == 0) colora4 -= 0.7;
 						else colora4 += 0.7;
@@ -1225,11 +1276,12 @@ namespace OW {
 						else colorc4 += 0.7;
 						if (colorc4 <= 0) jj34 = 1;
 						else if (colorc4 >= 255) jj34 = 0;
+
 						ImGui::SameLine();
-						ImGui::Spacing();
+						ImGui::Image((PVOID)Image5, ImVec2(60, 60)); // replace with programming
 						ImGui::SameLine();
 						ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(colora5 / 255.f, colorb5 / 255.f, colorc5 / 255.f, 255.f / 255.f));
-						ImGui::Text(skCrypt("       J"));
+						ImGui::Text("       ");
 						ImGui::PopStyleColor();
 						if (jj15 == 0) colora5 -= 0.7;
 						else colora5 += 0.7;
@@ -1250,7 +1302,7 @@ namespace OW {
 						ImGui::SameLine();
 						ImGui::Spacing();
 						ImGui::SameLine();
-						if (ImGui::Button(skCrypt(u8"AIM"), ImVec2(170, 50)))
+						if (ImGui::Button((u8"AIM"), ImVec2(170, 50)))
 							tab_index = 1;
 						ImGui::SameLine();
 						ImGui::Spacing();
@@ -1264,7 +1316,7 @@ namespace OW {
 						ImGui::Spacing();
 						ImGui::SameLine();
 
-						if (ImGui::Button(skCrypt(u8"ESP"), ImVec2(170, 50)))
+						if (ImGui::Button((u8"ESP"), ImVec2(170, 50)))
 							tab_index = 2;
 						ImGui::SameLine();
 						ImGui::Spacing();
@@ -1279,7 +1331,7 @@ namespace OW {
 						ImGui::SameLine();
 						ImGui::Spacing();
 						ImGui::SameLine();
-						if (ImGui::Button(skCrypt(u8"RAGE"), ImVec2(170, 50)))
+						if (ImGui::Button((u8"RAGE"), ImVec2(170, 50)))
 							tab_index = 3;
 						ImGui::SameLine();
 						ImGui::Spacing();
@@ -1294,7 +1346,7 @@ namespace OW {
 						ImGui::SameLine();
 						ImGui::Spacing();
 						ImGui::SameLine();
-						if (ImGui::Button(skCrypt(u8"LEGIT"), ImVec2(170, 50)))
+						if (ImGui::Button((u8"LEGIT"), ImVec2(170, 50)))
 							tab_index = 4;
 						ImGui::SameLine();
 						ImGui::Spacing();
@@ -1309,7 +1361,7 @@ namespace OW {
 						ImGui::SameLine();
 						ImGui::Spacing();
 						ImGui::SameLine();
-						if (ImGui::Button(skCrypt(u8"MISC"), ImVec2(170, 50)))
+						if (ImGui::Button((u8"MISC"), ImVec2(170, 50)))
 							tab_index = 5;
 
 						ImGui::Separator();
@@ -1320,54 +1372,54 @@ namespace OW {
 							ImGui::BulletText(Config::nowhero.data());
 							ImGui::PopStyleColor(1);
 							ImGui::Spacing();
-							if (ImGui::Button(skCrypt(u8"Main"), ImVec2(100, 30)))
+							if (ImGui::Button((u8"Main"), ImVec2(100, 30)))
 								subindex = 1;
 							ImGui::SameLine();
 							ImGui::Spacing();
 							ImGui::SameLine();
 							ImGui::Spacing();
 							ImGui::SameLine();
-							if (ImGui::Button(skCrypt(u8"Secondary"), ImVec2(100, 30)))
+							if (ImGui::Button((u8"Secondary"), ImVec2(100, 30)))
 								subindex = 2;
 							ImGui::SameLine();
 							ImGui::Spacing();
 							ImGui::SameLine();
 							ImGui::Spacing();
 							ImGui::SameLine();
-							if (ImGui::Button(skCrypt(u8"Aim Misc"), ImVec2(100, 30)))
+							if (ImGui::Button((u8"Aim Misc"), ImVec2(100, 30)))
 								subindex = 3;
 							if (subindex == 1) {
 								ImGui::Spacing();
 
 								ImGui::Spacing();
 								ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 1.0f));
-								ImGui::Toggle(skCrypt(u8"Trigger Bot"), &Config::triggerbot, ImGuiToggleFlags_Animated);
+								ImGui::Toggle((u8"Trigger Bot"), &Config::triggerbot, ImGuiToggleFlags_Animated);
 								if (Config::triggerbot) {
 									Config::Flick = false;
 									Config::hanzo_flick = false;
 									Config::Tracking = false;
 									Config::silent = false;
 								}
-								ImGui::Toggle(skCrypt(u8"Tracking"), &Config::Tracking, ImGuiToggleFlags_Animated);
+								ImGui::Toggle((u8"Tracking"), &Config::Tracking, ImGuiToggleFlags_Animated);
 								if (Config::Tracking) {
 									Config::Flick = false;
 									Config::hanzo_flick = false;
 									Config::triggerbot = false;
 									Config::silent = false;
 								}
-								ImGui::Toggle(skCrypt(u8"Flickbot"), &Config::Flick, ImGuiToggleFlags_Animated);
+								ImGui::Toggle((u8"Flickbot"), &Config::Flick, ImGuiToggleFlags_Animated);
 								if (Config::Flick) {
 									Config::Tracking = false;
 									Config::hanzo_flick = false;
 									Config::triggerbot = false;
 									Config::silent = false;
 								}
-								ImGui::Toggle(skCrypt(u8"Prediction"), &Config::Prediction, ImGuiToggleFlags_Animated);
-								if (Config::Prediction) ImGui::Toggle(skCrypt(u8"Gravity Predict"), &Config::Gravitypredit, ImGuiToggleFlags_Animated);
+								ImGui::Toggle((u8"Prediction"), &Config::Prediction, ImGuiToggleFlags_Animated);
+								if (Config::Prediction) ImGui::Toggle((u8"Gravity Predict"), &Config::Gravitypredit, ImGuiToggleFlags_Animated);
 								else Config::Gravitypredit = false;
 								if (local_entity.HeroID == eHero::HERO_HANJO) {
-									ImGui::Toggle(skCrypt(u8"Hanzo Flick"), &Config::hanzo_flick, ImGuiToggleFlags_Animated);
-									ImGui::Toggle(skCrypt(u8"Auto Calculate Speed"), &Config::hanzoautospeed, ImGuiToggleFlags_Animated);
+									ImGui::Toggle((u8"Hanzo Flick"), &Config::hanzo_flick, ImGuiToggleFlags_Animated);
+									ImGui::Toggle((u8"Auto Calculate Speed"), &Config::hanzoautospeed, ImGuiToggleFlags_Animated);
 								}
 								else Config::hanzoautospeed = false;
 								if (Config::hanzo_flick) {
@@ -1379,18 +1431,18 @@ namespace OW {
 								else Config::hanzo_flick = false;
 								if (Config::hanzo_flick || Config::Prediction) {
 									ImGui::Separator();
-									ImGui::BulletText(skCrypt(u8"PredictLevel"));
-									ImGui::SliderFloat(skCrypt(u8"BulletTravelSpeed"), &Config::predit_level, 0.f, 200.f, skCrypt("%.2f"));
+									ImGui::BulletText((u8"PredictLevel"));
+									ImGui::SliderFloat((u8"BulletTravelSpeed"), &Config::predit_level, 0.f, 200.f, ("%.2f"));
 								}
 								if (Config::hanzo_flick || Config::Flick || Config::silent) {
-									ImGui::Toggle(skCrypt(u8"AutoShoot"), &Config::AutoShoot, ImGuiToggleFlags_Animated);
+									ImGui::Toggle((u8"AutoShoot"), &Config::AutoShoot, ImGuiToggleFlags_Animated);
 									if (Config::AutoShoot) {
-										ImGui::SliderInt(skCrypt(u8"Interval(ms)"), &Config::Shoottime, 0, 1500, skCrypt("%.2f"));
+										ImGui::SliderInt((u8"Interval(ms)"), &Config::Shoottime, 0, 1500, ("%.2f"));
 									}
 								}
 								ImGui::PopStyleColor(1);
-								ImGui::BulletText(skCrypt(u8"Keybind"));
-								if (ImGui::BeginCombo(skCrypt(u8"##Key"), keys))
+								ImGui::BulletText((u8"Keybind"));
+								if (ImGui::BeginCombo((u8"##Key"), keys))
 								{
 									for (int i = 0; i < 5; i++)
 									{
@@ -1428,7 +1480,7 @@ namespace OW {
 								ImGui::Spacing();
 								ImGui::Spacing();
 								ImGui::Spacing(); ImGui::Spacing(); ImGui::Spacing(); ImGui::Spacing(); ImGui::Spacing(); ImGui::Spacing();
-								ImGuiKnobs::Knob(skCrypt(u8"FOV(MIN)"), &Config::minFov1, 1.f, 500.f, 1.f, "%.1f", ImGuiKnobVariant_Space, 100.f);
+								ImGuiKnobs::Knob((u8"FOV(MIN)"), &Config::minFov1, 1.f, 500.f, 1.f, "%.1f", ImGuiKnobVariant_Space, 100.f);
 								if (!Config::autoscalefov)
 									Config::Fov = Config::minFov1;
 								ImGui::SameLine();
@@ -1448,7 +1500,7 @@ namespace OW {
 								ImGui::SameLine();
 								ImGui::Spacing();
 								ImGui::SameLine();
-								ImGuiKnobs::Knob(skCrypt(u8"HitBox"), &Config::hitbox, 0.05f, 0.28f, 0.0001f, "%.2f", ImGuiKnobVariant_Stepped, 100.f);
+								ImGuiKnobs::Knob((u8"HitBox"), &Config::hitbox, 0.05f, 0.28f, 0.0001f, "%.2f", ImGuiKnobVariant_Stepped, 100.f);
 								ImGui::SameLine();
 								ImGui::Spacing();
 								ImGui::SameLine();
@@ -1467,7 +1519,7 @@ namespace OW {
 								ImGui::Spacing();
 								ImGui::SameLine();
 								if (local_entity.HeroID != eHero::HERO_GENJI) {
-									ImGuiKnobs::Knob(skCrypt(u8"Tracking Speed"), &Config::Tracking_smooth, 0.f, 3.f, 0.001f, "%.2f", ImGuiKnobVariant_Wiper, 100.f);
+									ImGuiKnobs::Knob((u8"Tracking Speed"), &Config::Tracking_smooth, 0.f, 3.f, 0.001f, "%.2f", ImGuiKnobVariant_Wiper, 100.f);
 									ImGui::SameLine();
 									ImGui::Spacing();
 									ImGui::SameLine();
@@ -1487,7 +1539,7 @@ namespace OW {
 									ImGui::SameLine();
 								}
 								else {
-									ImGuiKnobs::Knob(skCrypt(u8"Blade(Turn around speed)"), &Config::Tracking_smooth, 0.f, 3.f, 0.001f, "%.2f", ImGuiKnobVariant_Wiper, 100.f);
+									ImGuiKnobs::Knob((u8"Blade(Turn around speed)"), &Config::Tracking_smooth, 0.f, 3.f, 0.001f, "%.2f", ImGuiKnobVariant_Wiper, 100.f);
 									ImGui::SameLine();
 									ImGui::Spacing();
 									ImGui::SameLine();
@@ -1505,7 +1557,7 @@ namespace OW {
 									ImGui::SameLine();
 									ImGui::Spacing();
 									ImGui::SameLine();
-									ImGuiKnobs::Knob(skCrypt(u8"Blade Speed"), &Config::bladespeed, 0.f, 3.f, 0.001f, "%.2f", ImGuiKnobVariant_Wiper, 100.f);
+									ImGuiKnobs::Knob((u8"Blade Speed"), &Config::bladespeed, 0.f, 3.f, 0.001f, "%.2f", ImGuiKnobVariant_Wiper, 100.f);
 									ImGui::SameLine();
 									ImGui::Spacing();
 									ImGui::SameLine();
@@ -1524,7 +1576,7 @@ namespace OW {
 									ImGui::Spacing();
 									ImGui::SameLine();
 								}
-								ImGuiKnobs::Knob(skCrypt(u8"Flick Speed"), &Config::Flick_smooth, 0.f, 3.f, 0.001f, "%.2f", ImGuiKnobVariant_Wiper, 100.f);
+								ImGuiKnobs::Knob((u8"Flick Speed"), &Config::Flick_smooth, 0.f, 3.f, 0.001f, "%.2f", ImGuiKnobVariant_Wiper, 100.f);
 								ImGui::SameLine();
 								ImGui::Spacing();
 								ImGui::SameLine();
@@ -1542,23 +1594,23 @@ namespace OW {
 								ImGui::SameLine();
 								ImGui::Spacing();
 								ImGui::SameLine();
-								ImGuiKnobs::Knob(skCrypt(u8"Tracking Accelerate"), &Config::accvalue, 0.01f, 1.f, 0.001f, "%.2f", ImGuiKnobVariant_Wiper, 100.f);
+								ImGuiKnobs::Knob((u8"Tracking Accelerate"), &Config::accvalue, 0.01f, 1.f, 0.001f, "%.2f", ImGuiKnobVariant_Wiper, 100.f);
 								ImGui::Separator();
 								ImGui::Spacing();
 								ImGui::SameLine();
 								ImGui::PopStyleColor(1);
 								ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 1.0f));
-								ImGui::Toggle(skCrypt(u8"Closest"), &Config::autobone, ImGuiToggleFlags_Animated);
-								ImGui::Toggle(skCrypt(u8"Main Aim ally"), &Config::switch_team, ImGuiToggleFlags_Animated);
+								ImGui::Toggle((u8"Closest"), &Config::autobone, ImGuiToggleFlags_Animated);
+								ImGui::Toggle((u8"Main Aim ally"), &Config::switch_team, ImGuiToggleFlags_Animated);
 								if (!Config::autobone) {
 									if (Config::Bone == 1) {
-										Config::BoneName = skCrypt(u8"Head");
+										Config::BoneName = (u8"Head");
 									}
 									else if (Config::Bone == 2) {
-										Config::BoneName = skCrypt(u8"Neck");
+										Config::BoneName = (u8"Neck");
 									}
 									else {
-										Config::BoneName = skCrypt(u8"Chest");
+										Config::BoneName = (u8"Chest");
 									}
 									ImGui::Spacing();
 									ImGui::SliderInt(Config::BoneName, &Config::Bone, 1, 3);
@@ -1571,32 +1623,32 @@ namespace OW {
 								ImGui::Spacing();
 								ImGui::Spacing();
 								ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 1.0f));
-								ImGui::Toggle(skCrypt(u8"Secondary aim on/off"), &Config::secondaim, ImGuiToggleFlags_Animated);
+								ImGui::Toggle((u8"Secondary aim on/off"), &Config::secondaim, ImGuiToggleFlags_Animated);
 								ImGui::PopStyleColor(1);
 								if (Config::secondaim) {
 									ImGui::Spacing();
 									ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 1.0f));
-									ImGui::Toggle(skCrypt(u8"High priority"), &Config::highPriority, ImGuiToggleFlags_Animated);
-									ImGui::Toggle(skCrypt(u8"FlickBot2"), &Config::Flick2, ImGuiToggleFlags_Animated);
+									ImGui::Toggle((u8"High priority"), &Config::highPriority, ImGuiToggleFlags_Animated);
+									ImGui::Toggle((u8"FlickBot2"), &Config::Flick2, ImGuiToggleFlags_Animated);
 									if (Config::Flick2) Config::Tracking2 = false;
-									ImGui::Toggle(skCrypt(u8"Tracking2"), &Config::Tracking2, ImGuiToggleFlags_Animated);
+									ImGui::Toggle((u8"Tracking2"), &Config::Tracking2, ImGuiToggleFlags_Animated);
 									if (Config::Tracking2) Config::Flick2 = false;
-									ImGui::Toggle(skCrypt(u8"Prediction2"), &Config::Prediction2, ImGuiToggleFlags_Animated);
-									ImGui::Toggle(skCrypt(u8"Secondary Aim ally"), &Config::switch_team2, ImGuiToggleFlags_Animated);
+									ImGui::Toggle((u8"Prediction2"), &Config::Prediction2, ImGuiToggleFlags_Animated);
+									ImGui::Toggle((u8"Secondary Aim ally"), &Config::switch_team2, ImGuiToggleFlags_Animated);
 
-									if (Config::Prediction2) ImGui::Toggle(skCrypt(u8"Gravity Predict2"), &Config::Gravitypredit2, ImGuiToggleFlags_Animated);
+									if (Config::Prediction2) ImGui::Toggle((u8"Gravity Predict2"), &Config::Gravitypredit2, ImGuiToggleFlags_Animated);
 									else Config::Gravitypredit2 = false;
 
 									if (Config::Prediction2) {
 										ImGui::Separator();
-										ImGui::BulletText(skCrypt(u8"Predict level2："));
-										ImGui::SliderFloat(skCrypt(u8"Bullet Travel Speed 2"), &Config::predit_level2, 0.f, 200.f, skCrypt("%.2f"));
+										ImGui::BulletText((u8"Predict level2："));
+										ImGui::SliderFloat((u8"Bullet Travel Speed 2"), &Config::predit_level2, 0.f, 200.f, ("%.2f"));
 									}
 
 									ImGui::PopStyleColor(1);
-									ImGui::BulletText(skCrypt(u8"Keybind2"));
+									ImGui::BulletText((u8"Keybind2"));
 
-									if (ImGui::BeginCombo(skCrypt(u8"##Key2"), keys2))
+									if (ImGui::BeginCombo((u8"##Key2"), keys2))
 									{
 										for (int i = 0; i < 5; i++)
 										{
@@ -1627,9 +1679,9 @@ namespace OW {
 										ImGui::EndCombo();
 									}
 
-									ImGui::BulletText(skCrypt(u8"Toggle button2"));
+									ImGui::BulletText((u8"Toggle button2"));
 
-									if (ImGui::BeginCombo(skCrypt(u8"##FIREKey2"), keys3))
+									if (ImGui::BeginCombo((u8"##FIREKey2"), keys3))
 									{
 										for (int i = 0; i < 5; i++)
 										{
@@ -1661,18 +1713,18 @@ namespace OW {
 									}
 
 									ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 1.0f));
-									ImGui::Toggle(skCrypt(u8"Closest"), &Config::autobone2, ImGuiToggleFlags_Animated);
+									ImGui::Toggle((u8"Closest"), &Config::autobone2, ImGuiToggleFlags_Animated);
 									ImGui::PopStyleColor(1);
 									if (!Config::autobone2) {
 										ImGui::Spacing();
 										if (Config::Bone2 == 1) {
-											Config::BoneName2 = skCrypt(u8"Head");
+											Config::BoneName2 = (u8"Head");
 										}
 										else if (Config::Bone2 == 2) {
-											Config::BoneName2 = skCrypt(u8"Neck");
+											Config::BoneName2 = (u8"Neck");
 										}
 										else {
-											Config::BoneName2 = skCrypt(u8"Chest");
+											Config::BoneName2 = (u8"Chest");
 										}
 										ImGui::SliderInt(Config::BoneName2, &Config::Bone2, 1, 3);
 									}
@@ -1685,7 +1737,7 @@ namespace OW {
 									ImGui::Spacing();
 									ImGui::Spacing();
 									ImGui::Spacing(); ImGui::Spacing(); ImGui::Spacing(); ImGui::Spacing(); ImGui::Spacing(); ImGui::Spacing();
-									ImGuiKnobs::Knob(skCrypt(u8"FOV2(MIN)"), &Config::minFov2, 1.f, 500.f, 1.f, "%.1f", ImGuiKnobVariant_Space, 100.f);
+									ImGuiKnobs::Knob((u8"FOV2(MIN)"), &Config::minFov2, 1.f, 500.f, 1.f, "%.1f", ImGuiKnobVariant_Space, 100.f);
 									if (!Config::autoscalefov)
 										Config::Fov2 = Config::minFov2;
 									ImGui::SameLine();
@@ -1705,7 +1757,7 @@ namespace OW {
 									ImGui::SameLine();
 									ImGui::Spacing();
 									ImGui::SameLine();
-									ImGuiKnobs::Knob(skCrypt(u8"HitBox2"), &Config::hitbox2, 0.05f, 0.28f, 0.0001f, "%.2f", ImGuiKnobVariant_Stepped, 100.f);
+									ImGuiKnobs::Knob((u8"HitBox2"), &Config::hitbox2, 0.05f, 0.28f, 0.0001f, "%.2f", ImGuiKnobVariant_Stepped, 100.f);
 									ImGui::SameLine();
 									ImGui::Spacing();
 									ImGui::SameLine();
@@ -1723,7 +1775,7 @@ namespace OW {
 									ImGui::SameLine();
 									ImGui::Spacing();
 									ImGui::SameLine();
-									ImGuiKnobs::Knob(skCrypt(u8"Tracking Speed2"), &Config::Tracking_smooth2, 0.f, 3.f, 0.001f, "%.2f", ImGuiKnobVariant_Wiper, 100.f);
+									ImGuiKnobs::Knob((u8"Tracking Speed2"), &Config::Tracking_smooth2, 0.f, 3.f, 0.001f, "%.2f", ImGuiKnobVariant_Wiper, 100.f);
 									ImGui::SameLine();
 									ImGui::Spacing();
 									ImGui::SameLine();
@@ -1741,7 +1793,7 @@ namespace OW {
 									ImGui::SameLine();
 									ImGui::Spacing();
 									ImGui::SameLine();
-									ImGuiKnobs::Knob(skCrypt(u8"Flick Speed2"), &Config::Flick_smooth2, 0.f, 3.f, 0.001f, "%.2f", ImGuiKnobVariant_Wiper, 100.f);
+									ImGuiKnobs::Knob((u8"Flick Speed2"), &Config::Flick_smooth2, 0.f, 3.f, 0.001f, "%.2f", ImGuiKnobVariant_Wiper, 100.f);
 									ImGui::SameLine();
 									ImGui::Spacing();
 									ImGui::SameLine();
@@ -1759,7 +1811,7 @@ namespace OW {
 									ImGui::SameLine();
 									ImGui::Spacing();
 									ImGui::SameLine();
-									ImGuiKnobs::Knob(skCrypt(u8"Flick acc 2"), &Config::accvalue2, 0.01f, 1.f, 0.001f, "%.2f", ImGuiKnobVariant_Wiper, 100.f);
+									ImGuiKnobs::Knob((u8"Flick acc 2"), &Config::accvalue2, 0.01f, 1.f, 0.001f, "%.2f", ImGuiKnobVariant_Wiper, 100.f);
 									ImGui::Separator();
 									ImGui::Spacing();
 									ImGui::SameLine();
@@ -1768,24 +1820,24 @@ namespace OW {
 							}
 							if (subindex == 3) {
 								ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 1.0f));
-								ImGui::Toggle(skCrypt(u8"AI AIM(Beta)"), &Config::aiaim, ImGuiToggleFlags_Animated);
-								ImGui::Toggle(skCrypt(u8"Auto FOV"), &Config::autoscalefov, ImGuiToggleFlags_Animated);
+								ImGui::Toggle((u8"AI AIM(Beta)"), &Config::aiaim, ImGuiToggleFlags_Animated);
+								ImGui::Toggle((u8"Auto FOV"), &Config::autoscalefov, ImGuiToggleFlags_Animated);
 								if (!Config::autoscalefov) {
 									Config::Fov = Config::minFov1;
 									Config::Fov2 = Config::minFov2;
 								}
-								ImGui::Toggle(skCrypt(u8"Lock On Target"), &Config::lockontarget, ImGuiToggleFlags_Animated);
-								ImGui::Toggle(skCrypt(u8"Track Compensate"), &Config::trackcompensate, ImGuiToggleFlags_Animated);
-								ImGui::SliderFloat(skCrypt(u8"Compensate Area"), &Config::comarea, 0.f, 0.1f, skCrypt("%.3f"));
-								ImGui::SliderFloat(skCrypt(u8"Compensate Speed"), &Config::comspeed, 0.f, 1.f, skCrypt("%.2f"));
-								ImGui::Toggle(skCrypt(u8"Vertical Recoil Restrain"), &Config::norecoil, ImGuiToggleFlags_Animated);
-								ImGui::SliderFloat(skCrypt(u8"Restrain Value"), &Config::recoilnum, 0.f, 1.f, skCrypt("%.2f"));
-								ImGui::Toggle(skCrypt(u8"Disable Horizontal Recoil"), &Config::horizonreco, ImGuiToggleFlags_Animated);
+								ImGui::Toggle((u8"Lock On Target"), &Config::lockontarget, ImGuiToggleFlags_Animated);
+								ImGui::Toggle((u8"Track Compensate"), &Config::trackcompensate, ImGuiToggleFlags_Animated);
+								ImGui::SliderFloat((u8"Compensate Area"), &Config::comarea, 0.f, 0.1f, ("%.3f"));
+								ImGui::SliderFloat((u8"Compensate Speed"), &Config::comspeed, 0.f, 1.f, ("%.2f"));
+								ImGui::Toggle((u8"Vertical Recoil Restrain"), &Config::norecoil, ImGuiToggleFlags_Animated);
+								ImGui::SliderFloat((u8"Restrain Value"), &Config::recoilnum, 0.f, 1.f, ("%.2f"));
+								ImGui::Toggle((u8"Disable Horizontal Recoil"), &Config::horizonreco, ImGuiToggleFlags_Animated);
 								ImGui::PopStyleColor(1);
 								if (local_entity.HeroID == eHero::HERO_GENJI) {
 									ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 1.0f));
-									ImGui::Toggle(skCrypt(u8"Genji Blade"), &Config::GenjiBlade, ImGuiToggleFlags_Animated);
-									ImGui::Toggle(skCrypt(u8"Genji Auto Dash"), &Config::AutoShiftGenji, ImGuiToggleFlags_Animated);
+									ImGui::Toggle((u8"Genji Blade"), &Config::GenjiBlade, ImGuiToggleFlags_Animated);
+									ImGui::Toggle((u8"Genji Auto Dash"), &Config::AutoShiftGenji, ImGuiToggleFlags_Animated);
 									ImGui::PopStyleColor(1);
 								}
 								else {
@@ -1794,7 +1846,7 @@ namespace OW {
 								}
 								if (local_entity.HeroID == eHero::HERO_WIDOWMAKER) {
 									ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 1.0f));
-									ImGui::Toggle(skCrypt(u8"Auto Unscope"), &Config::widowautounscope, ImGuiToggleFlags_Animated);
+									ImGui::Toggle((u8"Auto Unscope"), &Config::widowautounscope, ImGuiToggleFlags_Animated);
 									ImGui::PopStyleColor(1);
 								}
 								else Config::widowautounscope = false;
@@ -1802,126 +1854,126 @@ namespace OW {
 						}
 						if (tab_index == 2) {
 							ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 1.0f));
-							ImGui::Toggle(skCrypt(u8"Info"), &Config::draw_info, ImGuiToggleFlags_Animated);
+							ImGui::Toggle((u8"Info"), &Config::draw_info, ImGuiToggleFlags_Animated);
 							if (Config::draw_info) {
 								ImGui::Spacing();
 								ImGui::SameLine();
-								ImGui::Toggle(skCrypt(u8"BattleTag"), &Config::drawbattletag, ImGuiToggleFlags_Animated);
+								ImGui::Toggle((u8"BattleTag"), &Config::drawbattletag, ImGuiToggleFlags_Animated);
 								ImGui::Spacing();
 								ImGui::SameLine();
-								ImGui::Toggle(skCrypt(u8"HP"), &Config::drawhealth, ImGuiToggleFlags_Animated);
+								ImGui::Toggle((u8"HP"), &Config::drawhealth, ImGuiToggleFlags_Animated);
 								ImGui::Spacing();
 								ImGui::SameLine();
-								ImGui::Toggle(skCrypt(u8"HP BAR"), &Config::healthbar, ImGuiToggleFlags_Animated);
+								ImGui::Toggle((u8"HP BAR"), &Config::healthbar, ImGuiToggleFlags_Animated);
 								ImGui::Spacing();
 								ImGui::SameLine();
-								ImGui::Toggle(skCrypt(u8"Distance"), &Config::dist, ImGuiToggleFlags_Animated);
+								ImGui::Toggle((u8"Distance"), &Config::dist, ImGuiToggleFlags_Animated);
 								ImGui::Spacing();
 								ImGui::SameLine();
-								ImGui::Toggle(skCrypt(u8"Name"), &Config::name, ImGuiToggleFlags_Animated);
+								ImGui::Toggle((u8"Name"), &Config::name, ImGuiToggleFlags_Animated);
 								ImGui::Spacing();
 								ImGui::SameLine();
-								ImGui::Toggle(skCrypt(u8"Ult"), &Config::ult, ImGuiToggleFlags_Animated);
+								ImGui::Toggle((u8"Ult"), &Config::ult, ImGuiToggleFlags_Animated);
 							}
-							ImGui::Toggle(skCrypt(u8"testCrossHair"), &Config::crosscircle, ImGuiToggleFlags_Animated);
-							ImGui::Toggle(skCrypt(u8"Bone"), &Config::draw_skel, ImGuiToggleFlags_Animated);
-							ImGui::Toggle(skCrypt(u8"Radar"), &Config::radar, ImGuiToggleFlags_Animated);
+							ImGui::Toggle((u8"testCrossHair"), &Config::crosscircle, ImGuiToggleFlags_Animated);
+							ImGui::Toggle((u8"Bone"), &Config::draw_skel, ImGuiToggleFlags_Animated);
+							ImGui::Toggle((u8"Radar"), &Config::radar, ImGuiToggleFlags_Animated);
 							if (Config::radar) {
-								ImGui::Toggle(skCrypt(u8"Radar Line"), &Config::radarline, ImGuiToggleFlags_Animated);
+								ImGui::Toggle((u8"Radar Line"), &Config::radarline, ImGuiToggleFlags_Animated);
 							}
 							else Config::radarline = false;
-							ImGui::Toggle(skCrypt(u8"Ult info"), &Config::skillinfo, ImGuiToggleFlags_Animated);
+							ImGui::Toggle((u8"Ult info"), &Config::skillinfo, ImGuiToggleFlags_Animated);
 							ImGui::PopStyleColor(1);
 							ImGui::Spacing();
 							ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 1.0f));
-							ImGui::Toggle(skCrypt(u8"HeadShotLine"), &Config::eyeray, ImGuiToggleFlags_Animated);
-							ImGui::Toggle(skCrypt(u8"Enemy/Ally Outline"), &Config::externaloutline, ImGuiToggleFlags_Animated);
-							ImGui::Toggle(skCrypt(u8"Only Ally Outline"), &Config::teamoutline, ImGuiToggleFlags_Animated);
-							ImGui::Toggle(skCrypt(u8"Outline hp colour"), &Config::healthoutline, ImGuiToggleFlags_Animated);
+							ImGui::Toggle((u8"HeadShotLine"), &Config::eyeray, ImGuiToggleFlags_Animated);
+							ImGui::Toggle((u8"Enemy/Ally Outline"), &Config::externaloutline, ImGuiToggleFlags_Animated);
+							ImGui::Toggle((u8"Only Ally Outline"), &Config::teamoutline, ImGuiToggleFlags_Animated);
+							ImGui::Toggle((u8"Outline hp colour"), &Config::healthoutline, ImGuiToggleFlags_Animated);
 							if (Config::healthoutline) Config::rainbowoutline = 0;
-							ImGui::Toggle(skCrypt(u8"Outline rainbow colour"), &Config::rainbowoutline, ImGuiToggleFlags_Animated);
+							ImGui::Toggle((u8"Outline rainbow colour"), &Config::rainbowoutline, ImGuiToggleFlags_Animated);
 							if (Config::rainbowoutline) Config::healthoutline = 0;
-							ImGui::Toggle(skCrypt(u8"Health Pack"), &Config::draw_hp_pack, ImGuiToggleFlags_Animated);
-							ImGui::Toggle(skCrypt(u8"2D box"), &Config::draw_edge, ImGuiToggleFlags_Animated);
-							ImGui::Toggle(skCrypt(u8"3D box"), &Config::drawbox3d, ImGuiToggleFlags_Animated);
-							ImGui::Toggle(skCrypt(u8"Line"), &Config::drawline, ImGuiToggleFlags_Animated);
+							ImGui::Toggle((u8"Health Pack"), &Config::draw_hp_pack, ImGuiToggleFlags_Animated);
+							ImGui::Toggle((u8"2D box"), &Config::draw_edge, ImGuiToggleFlags_Animated);
+							ImGui::Toggle((u8"3D box"), &Config::drawbox3d, ImGuiToggleFlags_Animated);
+							ImGui::Toggle((u8"Line"), &Config::drawline, ImGuiToggleFlags_Animated);
 							ImGui::PopStyleColor(1);
-							ImGui::ColorEdit3(skCrypt(u8"Box colour"), (float*)&Config::EnemyCol);
+							ImGui::ColorEdit3((u8"Box colour"), (float*)&Config::EnemyCol);
 							ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 1.0f));
-							ImGui::Toggle(skCrypt(u8"Draw Fov"), &Config::draw_fov, ImGuiToggleFlags_Animated);
+							ImGui::Toggle((u8"Draw Fov"), &Config::draw_fov, ImGuiToggleFlags_Animated);
 							ImGui::PopStyleColor(1);
-							ImGui::ColorEdit3(skCrypt(u8"FOV colour"), (float*)&Config::fovcol);
-							ImGui::ColorEdit3(skCrypt(u8"FOV2 colour"), (float*)&Config::fovcol2);
-							ImGui::BulletText(skCrypt(u8"outline colour"));
-							ImGui::ColorEdit3(skCrypt(u8"Invisible Enemy"), (float*)&Config::invisenargb);
-							ImGui::SliderFloat(skCrypt(u8"Invisible Enemy Highlight"), &Config::invisenargb.w, 0.0f, 1.f, skCrypt("%.2f"));
-							ImGui::ColorEdit3(skCrypt(u8"Visible Enemy"), (float*)&Config::enargb);
-							ImGui::SliderFloat(skCrypt(u8"Visible Enemy Highlight"), &Config::enargb.w, 0.0f, 1.f, skCrypt("%.2f"));
-							ImGui::ColorEdit3(skCrypt(u8"Target"), (float*)&Config::targetargb);
-							ImGui::SliderFloat(skCrypt(u8"Target Highlight"), &Config::targetargb.w, 0.0f, 1.f, skCrypt("%.2f"));
-							ImGui::ColorEdit3(skCrypt(u8"Target2"), (float*)&Config::targetargb2);
-							ImGui::SliderFloat(skCrypt(u8"Target2 Highlight"), &Config::targetargb2.w, 0.0f, 1.f, skCrypt("%.2f"));
-							ImGui::ColorEdit3(skCrypt(u8"Ally"), (float*)&Config::allyargb);
-							ImGui::SliderFloat(skCrypt(u8"Ally Highlight"), &Config::allyargb.w, 0.0f, 1.f, skCrypt("%.2f"));
+							ImGui::ColorEdit3((u8"FOV colour"), (float*)&Config::fovcol);
+							ImGui::ColorEdit3((u8"FOV2 colour"), (float*)&Config::fovcol2);
+							ImGui::BulletText((u8"outline colour"));
+							ImGui::ColorEdit3((u8"Invisible Enemy"), (float*)&Config::invisenargb);
+							ImGui::SliderFloat((u8"Invisible Enemy Highlight"), &Config::invisenargb.w, 0.0f, 1.f, ("%.2f"));
+							ImGui::ColorEdit3((u8"Visible Enemy"), (float*)&Config::enargb);
+							ImGui::SliderFloat((u8"Visible Enemy Highlight"), &Config::enargb.w, 0.0f, 1.f, ("%.2f"));
+							ImGui::ColorEdit3((u8"Target"), (float*)&Config::targetargb);
+							ImGui::SliderFloat((u8"Target Highlight"), &Config::targetargb.w, 0.0f, 1.f, ("%.2f"));
+							ImGui::ColorEdit3((u8"Target2"), (float*)&Config::targetargb2);
+							ImGui::SliderFloat((u8"Target2 Highlight"), &Config::targetargb2.w, 0.0f, 1.f, ("%.2f"));
+							ImGui::ColorEdit3((u8"Ally"), (float*)&Config::allyargb);
+							ImGui::SliderFloat((u8"Ally Highlight"), &Config::allyargb.w, 0.0f, 1.f, ("%.2f"));
 							ImGui::Separator();
 						}
 						if (tab_index == 3) {
 							ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 1.0f));
-							ImGui::Toggle(skCrypt(u8"Aim Instantly"), &Config::Rage, ImGuiToggleFlags_Animated);
-							ImGui::SameLine(); Render::Help(skCrypt(u8"Aim Instantly"));
+							ImGui::Toggle((u8"Aim Instantly"), &Config::Rage, ImGuiToggleFlags_Animated);
+							ImGui::SameLine(); Render::Help((u8"Aim Instantly"));
 							if (Config::Rage) {
-								ImGui::Toggle(skCrypt(u8"Fake Silent"), &Config::fakesilent, ImGuiToggleFlags_Animated);
+								ImGui::Toggle((u8"Fake Silent"), &Config::fakesilent, ImGuiToggleFlags_Animated);
 							}
-							ImGui::Toggle(skCrypt(u8"Non fov limit"), &Config::fov360, ImGuiToggleFlags_Animated);
+							ImGui::Toggle((u8"Non fov limit"), &Config::fov360, ImGuiToggleFlags_Animated);
 							if (!Config::fov360 && Config::Fov == 6000) Config::Fov = 200;
 							if (!Config::fov360 && Config::Fov2 == 6000) Config::Fov2 = 200;
-							ImGui::BulletText(skCrypt(u8"Risky"));
+							ImGui::BulletText((u8"Risky"));
 							ImGui::PopStyleColor(1);
 						}
 						if (tab_index == 4) {
 							ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 1.0f));
-							ImGui::BulletText(skCrypt(u8"Play more legit"));
+							ImGui::BulletText((u8"Play more legit"));
 
-							ImGui::Toggle(skCrypt(u8"Auto miss FLICK ONLY"), &Config::dontshot, ImGuiToggleFlags_Animated);
+							ImGui::Toggle((u8"Auto miss FLICK ONLY"), &Config::dontshot, ImGuiToggleFlags_Animated);
 
-							ImGui::SliderFloat(skCrypt(u8"miss hitbox(missbox)"), &Config::missbox, 0.f, 1.f, skCrypt("%.2f"));
-							ImGui::SliderInt(skCrypt(u8"miss frequency"), &Config::shotmanydont, 0, 6);
+							ImGui::SliderFloat((u8"miss hitbox(missbox)"), &Config::missbox, 0.f, 1.f, ("%.2f"));
+							ImGui::SliderInt((u8"miss frequency"), &Config::shotmanydont, 0, 6);
 							ImGui::Spacing();
-							ImGui::Toggle(skCrypt(u8"Switching target delay"), &Config::targetdelay, ImGuiToggleFlags_Animated);
+							ImGui::Toggle((u8"Switching target delay"), &Config::targetdelay, ImGuiToggleFlags_Animated);
 
-							ImGui::SliderInt(skCrypt(u8"Delay(ms)"), &Config::targetdelaytime, 0, 1000, skCrypt("%.2f"));
-							ImGui::Toggle(skCrypt(u8"Shoot when Timeout"), &Config::hitboxdelayshoot, ImGuiToggleFlags_Animated);
+							ImGui::SliderInt((u8"Delay(ms)"), &Config::targetdelaytime, 0, 1000, ("%.2f"));
+							ImGui::Toggle((u8"Shoot when Timeout"), &Config::hitboxdelayshoot, ImGuiToggleFlags_Animated);
 
-							ImGui::SliderInt(skCrypt(u8":timeout(ms)"), &Config::hiboxdelaytime, 0, 1000, skCrypt("%.2f"));
+							ImGui::SliderInt((u8":timeout(ms)"), &Config::hiboxdelaytime, 0, 1000, ("%.2f"));
 							ImGui::PopStyleColor(1);
 
 						}
 						if (tab_index == 5) {
 							ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 1.0f));
-							ImGui::Toggle(skCrypt(u8"Change ingame fov"), &Config::enablechangefov, ImGuiToggleFlags_Animated);
+							ImGui::Toggle((u8"Change ingame fov"), &Config::enablechangefov, ImGuiToggleFlags_Animated);
 							if (Config::enablechangefov)
-								ImGui::SliderFloat(skCrypt(u8":degree"), &Config::CHANGEFOV, 1.f, 179.f, skCrypt("%.2f"));
+								ImGui::SliderFloat((u8":degree"), &Config::CHANGEFOV, 1.f, 179.f, ("%.2f"));
 
-							ImGui::Toggle(skCrypt(u8"Name Spoofer"), &Config::namespoofer, ImGuiToggleFlags_Animated);
+							ImGui::Toggle((u8"Name Spoofer"), &Config::namespoofer, ImGuiToggleFlags_Animated);
 							if (Config::namespoofer) {
 								ImGui::InputText(u8"Spoof Name", Config::fakename, sizeof(Config::fakename));
 							}
 
-							ImGui::Toggle(skCrypt(u8"Auto melee"), &Config::AutoMelee, ImGuiToggleFlags_Animated);
+							ImGui::Toggle((u8"Auto melee"), &Config::AutoMelee, ImGuiToggleFlags_Animated);
 							ImGui::PopStyleColor(1);
-							ImGui::SliderFloat(skCrypt(u8"Auto melee HP"), &Config::meleehealth, 0.f, 80.f, skCrypt("%.2f"));
-							ImGui::SliderFloat(skCrypt(u8"Auto melee dist"), &Config::meleedistance, 0.f, 10.f, skCrypt("%.2f"));
+							ImGui::SliderFloat((u8"Auto melee HP"), &Config::meleehealth, 0.f, 80.f, ("%.2f"));
+							ImGui::SliderFloat((u8"Auto melee dist"), &Config::meleedistance, 0.f, 10.f, ("%.2f"));
 							ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1.f, 0.f, 0.f, 1.0f));
-							ImGui::Toggle(skCrypt(u8"Auto Heal Skill"), &Config::AutoSkill, ImGuiToggleFlags_Animated);
-							ImGui::SliderFloat(skCrypt(u8"Auto Heal Skill Trigger HP"), &Config::SkillHealth, 0.f, 80.f, skCrypt("%.2f"));
+							ImGui::Toggle((u8"Auto Heal Skill"), &Config::AutoSkill, ImGuiToggleFlags_Animated);
+							ImGui::SliderFloat((u8"Auto Heal Skill Trigger HP"), &Config::SkillHealth, 0.f, 80.f, ("%.2f"));
 							ImGui::PopStyleColor(1);
 							
 							if (ImGui::Button(u8"Manual Save"))
 							{
 								Config::manualsave = true;
-								ImGui::InsertNotification({ ImGuiToastType_Success, 3000, skCrypt(u8"Manual saved successfully"), "" });
+								ImGui::InsertNotification({ ImGuiToastType_Success, 3000, (u8"Manual saved successfully"), "" });
 							}
-							ImGui::BulletText(skCrypt(u8"Press when nothing is working"));
+							ImGui::BulletText((u8"Press when nothing is working"));
 							if (ImGui::Button(u8"Reboot thread")) {
 								Config::doingentity = 0;
 								Sleep(1000);
@@ -1931,7 +1983,7 @@ namespace OW {
 								Sleep(51);
 								_beginthread((_beginthread_proc_type)entity_thread, 0, 0);
 								Sleep(51);
-								ImGui::InsertNotification({ ImGuiToastType_Success, 3000, skCrypt(u8"Reboot Successfully"), "" });
+								ImGui::InsertNotification({ ImGuiToastType_Success, 3000, (u8"Reboot Successfully"), "" });
 							}
 							ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(colora5 / 255.f, colorb5 / 255.f, colorc5 / 255.f, 255.f / 255.f));
 							ImGui::Text(u8"Expires in：%dDays %dHours %dMins %dSecs", (expiretime - nowtime) / 60 / 60 / 24, ((expiretime - nowtime) / 60 / 60) % 24, ((expiretime - nowtime) / 60) % 60, (expiretime - nowtime) % 60);
@@ -1984,7 +2036,7 @@ namespace OW {
 					if (Config::triggerbot && GetAsyncKeyState(Config::aim_key)) {
 						auto vec = GetVector3(Config::Prediction ? true : false);
 						if (vec != Vector3(0, 0, 0) && !(entities[Config::Targetenemyi].skill2act && entities[Config::Targetenemyi].HeroID == eHero::HERO_GENJI)) {
-							auto local_angle = SDK->RPM<Vector3>(SDK->g_player_controller + 0x11D0);
+							auto local_angle = SDK->RPM<Vector3>(SDK->g_player_controller + offset::view_angle);
 							auto calc_target = CalcAngle(XMFLOAT3(vec.X, vec.Y, vec.Z), viewMatrix_xor.get_location());
 							auto vec_calc_target = Vector3(calc_target.x, calc_target.y, calc_target.z);
 							auto local_loc = Vector3(viewMatrix_xor.get_location().x, viewMatrix_xor.get_location().y, viewMatrix_xor.get_location().z);
@@ -2004,7 +2056,7 @@ namespace OW {
 						{
 							auto vec = GetVector3(Config::Prediction ? true : false);
 							if (vec != Vector3(0, 0, 0) && !(entities[Config::Targetenemyi].skill2act && entities[Config::Targetenemyi].HeroID == eHero::HERO_GENJI) && ((!entities[Config::Targetenemyi].imort && !entities[Config::Targetenemyi].barrprot) || Config::switch_team)) {
-								auto local_angle = SDK->RPM<Vector3>(SDK->g_player_controller + 0x11D0);
+								auto local_angle = SDK->RPM<Vector3>(SDK->g_player_controller + offset::view_angle);
 								auto calc_target = CalcAngle(XMFLOAT3(vec.X, vec.Y, vec.Z), viewMatrix_xor.get_location());
 								auto vec_calc_target = Vector3(calc_target.x, calc_target.y, calc_target.z);
 								auto Target = SmoothLinear(local_angle, vec_calc_target, Config::Tracking_smooth / 10.f);
@@ -2040,9 +2092,9 @@ namespace OW {
 											Config::doingdelay = 0;
 										}
 									}
-									if (Config::Rage) SDK->WPM<Vector3>(SDK->g_player_controller + 0x11D0, vec_calc_target);
+									if (Config::Rage) SDK->WPM<Vector3>(SDK->g_player_controller + offset::view_angle, vec_calc_target);
 									else
-										SDK->WPM<Vector3>(SDK->g_player_controller + 0x11D0, Target);
+										SDK->WPM<Vector3>(SDK->g_player_controller + offset::view_angle, Target);
 									float dist = Vector3(viewMatrix_xor.get_location().x, viewMatrix_xor.get_location().y, viewMatrix_xor.get_location().z).DistTo(vec);
 									if (Config::health <= Config::meleehealth && dist <= Config::meleedistance && Config::AutoMelee) {
 										SetKey(0x800);
@@ -2112,11 +2164,11 @@ namespace OW {
 									}
 								}
 								else if (Config::doingdelay) Config::doingdelay = 0;
-								if (dodelay && !Config::doingdelay) {//超时开枪 dodelay
+								if (dodelay && !Config::doingdelay) {
 									hitbotdelaytime = GetTickCount();
 									dodelay = 0;
 								}
-								auto local_angle = SDK->RPM<Vector3>(SDK->g_player_controller + 0x11D0);
+								auto local_angle = SDK->RPM<Vector3>(SDK->g_player_controller + offset::view_angle);
 								auto calc_target = CalcAngle(XMFLOAT3(vec.X, vec.Y, vec.Z), viewMatrix_xor.get_location());
 								auto vec_calc_target = Vector3(calc_target.x, calc_target.y, calc_target.z);
 								auto Target = SmoothAccelerate(local_angle, vec_calc_target, Config::Flick_smooth / 10.f, Config::accvalue);
@@ -2153,8 +2205,8 @@ namespace OW {
 									}
 									if (Config::Rage) {
 										if (Config::fakesilent) {
-											Vector3 orangle = SDK->RPM<Vector3>(SDK->g_player_controller + 0x11D0);
-											SDK->WPM<Vector3>(SDK->g_player_controller + 0x11D0, vec_calc_target);
+											Vector3 orangle = SDK->RPM<Vector3>(SDK->g_player_controller + offset::view_angle);
+											SDK->WPM<Vector3>(SDK->g_player_controller + offset::view_angle, vec_calc_target);
 											if (Config::lockontarget)
 												SDK->WPM<float>(GetSenstivePTR(), 0);
 											SetKey(0x1);
@@ -2162,11 +2214,11 @@ namespace OW {
 											if (Config::lockontarget)
 												SDK->WPM<float>(GetSenstivePTR(), origin_sens);
 											Config::shooted = true;
-											SDK->WPM<Vector3>(SDK->g_player_controller + 0x11D0, orangle);
+											SDK->WPM<Vector3>(SDK->g_player_controller + offset::view_angle, orangle);
 											continue;
 										}
 										else {
-											SDK->WPM<Vector3>(SDK->g_player_controller + 0x11D0, vec_calc_target);
+											SDK->WPM<Vector3>(SDK->g_player_controller + offset::view_angle, vec_calc_target);
 											if (Config::lockontarget) SDK->WPM<float>(GetSenstivePTR(), 0);
 											SetKey(0x1);
 											Sleep(1);
@@ -2175,7 +2227,7 @@ namespace OW {
 											continue;
 										}
 									}
-									SDK->WPM<Vector3>(SDK->g_player_controller + 0x11D0, Target);
+									SDK->WPM<Vector3>(SDK->g_player_controller + offset::view_angle, Target);
 									if (in_range(local_angle, vec_calc_target, local_loc, vec, Config::hitbox)) {
 										if (Config::lockontarget) SDK->WPM<float>(GetSenstivePTR(), 0);
 										if (local_entity.HeroID == eHero::HERO_GENJI || local_entity.HeroID == eHero::HERO_KIRIKO) {
@@ -2259,12 +2311,12 @@ namespace OW {
 							}
 							if (vec != Vector3(0, 0, 0) && !(entities[Config::Targetenemyi].skill2act && entities[Config::Targetenemyi].HeroID == eHero::HERO_GENJI) && ((!entities[Config::Targetenemyi].imort && !entities[Config::Targetenemyi].barrprot) || Config::switch_team)) {
 
-								auto local_angle = SDK->RPM<Vector3>(SDK->g_player_controller + 0x11D0);
+								auto local_angle = SDK->RPM<Vector3>(SDK->g_player_controller + offset::view_angle);
 								auto calc_target = CalcAngle(XMFLOAT3(vec.X, vec.Y, vec.Z), viewMatrix_xor.get_location());
 								auto vec_calc_target = Vector3(calc_target.x, calc_target.y, calc_target.z);
 								auto Target = SmoothAccelerate(local_angle, vec_calc_target, Config::Flick_smooth / 10.f, Config::accvalue);
 								auto local_loc = Vector3(viewMatrix_xor.get_location().x, viewMatrix_xor.get_location().y, viewMatrix_xor.get_location().z);
-								if (dodelay && !Config::doingdelay) {//超时开枪 dodelay
+								if (dodelay && !Config::doingdelay) {
 									hitbotdelaytime = GetTickCount();
 									dodelay = 0;
 								}
@@ -2297,20 +2349,20 @@ namespace OW {
 									}
 									if (Config::Rage) {
 										if (Config::fakesilent) {
-											Vector3 orangle = SDK->RPM<Vector3>(SDK->g_player_controller + 0x11D0);
-											SDK->WPM<Vector3>(SDK->g_player_controller + 0x11D0, vec_calc_target);
+											Vector3 orangle = SDK->RPM<Vector3>(SDK->g_player_controller + offset::view_angle);
+											SDK->WPM<Vector3>(SDK->g_player_controller + offset::view_angle, vec_calc_target);
 											if (Config::lockontarget) SDK->WPM<float>(GetSenstivePTR(), 0);
 											if (local_entity.skill2act) SetKey(0x1);
 											else SetKeyHold(0x1000, 100);
 											Sleep(25);
 											if (Config::lockontarget) SDK->WPM<float>(GetSenstivePTR(), origin_sens);
 											Config::shooted = true;
-											SDK->WPM<Vector3>(SDK->g_player_controller + 0x11D0, orangle);
+											SDK->WPM<Vector3>(SDK->g_player_controller + offset::view_angle, orangle);
 											continue;
 										}
 										else
 										{
-											SDK->WPM<Vector3>(SDK->g_player_controller + 0x11D0, vec_calc_target);
+											SDK->WPM<Vector3>(SDK->g_player_controller + offset::view_angle, vec_calc_target);
 											if (local_entity.skill2act) SetKey(0x1);
 											else SetKeyHold(0x1000, 100);
 											Config::shooted = true;
@@ -2333,7 +2385,7 @@ namespace OW {
 										}
 									}
 									else if (Config::doingdelay) Config::doingdelay = 0;
-									SDK->WPM<Vector3>(SDK->g_player_controller + 0x11D0, Target);
+									SDK->WPM<Vector3>(SDK->g_player_controller + offset::view_angle, Target);
 									if (in_range(local_angle, vec_calc_target, local_loc, vec, Config::hitbox)) {
 										if (Config::lockontarget) SDK->WPM<float>(GetSenstivePTR(), 0);
 										if (local_entity.skill2act) SetKey(0x1);
@@ -2405,7 +2457,7 @@ namespace OW {
 							if (vec != Vector3(0, 0, 0)) {
 								float dist = Vector3(viewMatrix_xor.get_location().x, viewMatrix_xor.get_location().y, viewMatrix_xor.get_location().z).DistTo(vec);
 								if (dist > 20) continue;
-								auto local_angle = SDK->RPM<Vector3>(SDK->g_player_controller + 0x11D0);
+								auto local_angle = SDK->RPM<Vector3>(SDK->g_player_controller + offset::view_angle);
 								auto calc_target = CalcAngle(XMFLOAT3(vec.X, vec.Y, vec.Z), viewMatrix_xor.get_location());
 								auto vec_calc_target = Vector3(calc_target.x, calc_target.y, calc_target.z);
 								auto Target = SmoothLinear(local_angle, vec_calc_target, speed / 10.f);
@@ -2415,8 +2467,8 @@ namespace OW {
 									float dist = Vector3(viewMatrix_xor.get_location().x, viewMatrix_xor.get_location().y, viewMatrix_xor.get_location().z).DistTo(vec);
 									if ((!local_entity.skillcd1 && dist < 20) || dist < 7)
 									{
-										if (Config::Rage) SDK->WPM<Vector3>(SDK->g_player_controller + 0x11D0, vec_calc_target);
-										else SDK->WPM<Vector3>(SDK->g_player_controller + 0x11D0, Target);
+										if (Config::Rage) SDK->WPM<Vector3>(SDK->g_player_controller + offset::view_angle, vec_calc_target);
+										else SDK->WPM<Vector3>(SDK->g_player_controller + offset::view_angle, Target);
 									}
 									if (!local_entity.skillcd1 && in_range(local_angle, vec_calc_target, local_loc, vec, 0.8)) {
 										if (detecttoggle && !first) {
@@ -2484,7 +2536,7 @@ namespace OW {
 							float dist = Vector3(viewMatrix_xor.get_location().x, viewMatrix_xor.get_location().y, viewMatrix_xor.get_location().z).DistTo(vec);
 							if (!entities[Config::Targetenemyi].imort && !entities[Config::Targetenemyi].barrprot) {
 								if (!local_entity.skillcd1 && Config::health <= 50 && dist <= 15 && entities[Config::Targetenemyi].HeroID != 0x16dd && entities[Config::Targetenemyi].HeroID != 0x16ee) {
-									auto local_angle = SDK->RPM<Vector3>(SDK->g_player_controller + 0x11D0);
+									auto local_angle = SDK->RPM<Vector3>(SDK->g_player_controller + offset::view_angle);
 									auto calc_target = CalcAngle(XMFLOAT3(vec.X, vec.Y, vec.Z), viewMatrix_xor.get_location());
 									auto vec_calc_target = Vector3(calc_target.x, calc_target.y, calc_target.z);
 									auto Target = SmoothLinear(local_angle, vec_calc_target, Config::Tracking_smooth / 10.f);
@@ -2494,7 +2546,7 @@ namespace OW {
 									}
 								}
 								else if (!local_entity.skillcd1 && Config::health <= 80 && dist <= 17 && dist >= 15 && entities[Config::Targetenemyi].HeroID != 0x16dd && entities[Config::Targetenemyi].HeroID != 0x16ee) {
-									auto local_angle = SDK->RPM<Vector3>(SDK->g_player_controller + 0x11D0);
+									auto local_angle = SDK->RPM<Vector3>(SDK->g_player_controller + offset::view_angle);
 									auto calc_target = CalcAngle(XMFLOAT3(vec.X, vec.Y, vec.Z), viewMatrix_xor.get_location());
 									auto vec_calc_target = Vector3(calc_target.x, calc_target.y, calc_target.z);
 									auto Target = SmoothLinear(local_angle, vec_calc_target, Config::Tracking_smooth / 10.f);
@@ -2640,7 +2692,7 @@ namespace OW {
 						{
 							auto vec = GetVector3aim2(Config::Prediction2 ? true : false);
 							if (vec != Vector3(0, 0, 0) && !(entities[Config::Targetenemyi].skill2act && entities[Config::Targetenemyi].HeroID == eHero::HERO_GENJI)) {
-								auto local_angle = SDK->RPM<Vector3>(SDK->g_player_controller + 0x11D0);
+								auto local_angle = SDK->RPM<Vector3>(SDK->g_player_controller + offset::view_angle);
 								auto calc_target = CalcAngle(XMFLOAT3(vec.X, vec.Y, vec.Z), viewMatrix_xor.get_location());
 								auto vec_calc_target = Vector3(calc_target.x, calc_target.y, calc_target.z);
 								Vector3 Target;
@@ -2692,7 +2744,7 @@ namespace OW {
 										SetKey(0x800);
 									}
 
-									SDK->WPM<Vector3>(SDK->g_player_controller + 0x11D0, Target);
+									SDK->WPM<Vector3>(SDK->g_player_controller + offset::view_angle, Target);
 									if (Config::Flick2) {
 										if (in_range(local_angle, vec_calc_target, local_loc, vec, Config::hitbox2)) {
 											if (Config::togglekey == 0)
@@ -2757,7 +2809,7 @@ namespace OW {
 	inline void configsavenloadthread() {
 		TCHAR bufsave[100];
 		if (Config::lastheroid == -2) {
-			ImGui::InsertNotification({ ImGuiToastType_Success, 8000, skCrypt(u8"test Internal Loaded\nWelcome！"), "" });
+			ImGui::InsertNotification({ ImGuiToastType_Success, 8000, (u8"test Internal Loaded\nWelcome！"), "" });
 			Config::lastheroid = 0;
 		}
 		while (1) {
@@ -3036,7 +3088,7 @@ namespace OW {
 
 
 						std::string saveheroname = GetHeroEngNames(Config::lastheroid, local_entity.LinkBase).c_str();
-						saveheroname = skCrypt(u8"Saved:").decrypt() + saveheroname;
+						saveheroname = (u8"Saved:") + saveheroname;
 						ImGui::InsertNotification({ ImGuiToastType_Success, 5000,saveheroname.data() , "" });
 					}
 					Config::Fov = GetPrivateProfileInt(_T(GetHeroEngNames(local_entity.HeroID, local_entity.LinkBase).c_str()), _T("FOV"), 200, _T(".\\config.ini"));
@@ -3285,8 +3337,8 @@ namespace OW {
 					Config::lastheroid = local_entity.HeroID;
 					Sleep(2);
 					std::string saveheroname = GetHeroEngNames(local_entity.HeroID, local_entity.LinkBase).c_str();
-					Config::nowhero = skCrypt(u8"Now using:").decrypt() + saveheroname;
-					saveheroname = skCrypt(u8"Loaded:").decrypt() + saveheroname;
+					Config::nowhero = (u8"Now using:") + saveheroname;
+					saveheroname = (u8"Loaded:") + saveheroname;
 					ImGui::InsertNotification({ ImGuiToastType_Success, 5000,saveheroname.data() , "" });
 				}
 			}
@@ -3565,7 +3617,7 @@ namespace OW {
 				_stprintf(bufsave, _T("%d"), (int)(Config::allyargb.w * 10000));
 				WritePrivateProfileString(_T("Global"), _T("allyargbw"), bufsave, _T(".\\config.ini"));
 				std::string saveheroname = GetHeroEngNames(Config::lastheroid, local_entity.LinkBase).c_str();
-				saveheroname = skCrypt(u8"Saved:").decrypt() + saveheroname;
+				saveheroname = (u8"Saved:") + saveheroname;
 				ImGui::InsertNotification({ ImGuiToastType_Success, 5000,saveheroname.data() , "" });
 			}
 			Sleep(2);
@@ -3577,10 +3629,10 @@ namespace OW {
 			if (entities.size() > 0) {
 				if (local_entity.AngleBase && (GetAsyncKeyState(Config::aim_key) || GetAsyncKeyState(Config::aim_key2) || GetAsyncKeyState(0x01) || GetAsyncKeyState(0x02))) {
 					if (Config::horizonreco) {
-						SDK->WPM<float>(local_entity.AngleBase + 0x11A0, 0);
+						SDK->WPM<float>(local_entity.AngleBase + 0x1608, 0);
 					}
 					if (Config::norecoil) {
-						SDK->WPM<float>(local_entity.AngleBase + 0x1694, Config::recoilnum);
+						SDK->WPM<float>(local_entity.AngleBase + 0x160C, Config::recoilnum);
 					}
 
 				}

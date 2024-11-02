@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Header Files\Protection">
-      <UniqueIdentifier>{587eab74-13d3-4764-9f32-49b7924744df}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Resource Files\imgui">
       <UniqueIdentifier>{4c764dc0-9dba-47ff-9141-535b98f9ebd5}</UniqueIdentifier>
     </Filter>
@@ -65,9 +62,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="skStr.h">
-      <Filter>Header Files\Protection</Filter>
-    </ClInclude>
     <ClInclude Include="Overwatch.hpp">
       <Filter>Resource Files</Filter>
     </ClInclude>
@@ -192,6 +186,9 @@
       <Filter>Resource Files\imgui</Filter>
     </ClInclude>
     <ClInclude Include="spoofcall.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vampimg.h">
       <Filter>Resource Files</Filter>
     </ClInclude>
   </ItemGroup>

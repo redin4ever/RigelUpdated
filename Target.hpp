@@ -6,7 +6,7 @@
 namespace OW {
 	inline void SetKey(uint32_t key) {
 		__try {
-			SDK->WPM<uint32_t>(SDK->g_player_controller + 0x118C, key);
+			SDK->WPM<uint32_t>(SDK->g_player_controller + 0x115C, key);
 		}
 		__except (EXCEPTION_EXECUTE_HANDLER) {}
 	}
@@ -70,17 +70,17 @@ namespace OW {
 		clock_t previous = clock();
 		Key += 0x2;
 		while (clock() - previous < duration) {
-			SDK->WPM<uint32_t>(SDK->g_player_controller + 0x118C, Key);
+			SDK->WPM<uint32_t>(SDK->g_player_controller + 0x115C, Key);
 			if (Config::horizonreco) {
-				SDK->WPM<float>(local_entity.AngleBase + 0x11A0, 0);
+				SDK->WPM<float>(local_entity.AngleBase + 0x1608, 0);
 			}
 			if (Config::norecoil) {
-				SDK->WPM<float>(local_entity.AngleBase + 0x1694, Config::recoilnum);
+				SDK->WPM<float>(local_entity.AngleBase + 0x160C, Config::recoilnum);
 			}
 		}
 		if (Config::widowautounscope) {
 			while (clock() - previous < 100) {
-				SDK->WPM<uint32_t>(SDK->g_player_controller + 0x118C, 0);
+				SDK->WPM<uint32_t>(SDK->g_player_controller + 0x115C, 0);
 			}
 		}
 	}
@@ -88,12 +88,12 @@ namespace OW {
 	inline void SetKeyHold(int Key, float duration) {
 		clock_t previous = clock();
 		while (clock() - previous < duration) {
-			SDK->WPM<uint32_t>(SDK->g_player_controller + 0x118C, Key);
+			SDK->WPM<uint32_t>(SDK->g_player_controller + 0x115C, Key);
 			if (Config::horizonreco) {
-				SDK->WPM<float>(local_entity.AngleBase + 0x11A0, 0);
+				SDK->WPM<float>(local_entity.AngleBase + 0x1608, 0);
 			}
 			if (Config::norecoil) {
-				SDK->WPM<float>(local_entity.AngleBase + 0x1694, Config::recoilnum);
+				SDK->WPM<float>(local_entity.AngleBase + 0x160C, Config::recoilnum);
 			}
 		}
 	}

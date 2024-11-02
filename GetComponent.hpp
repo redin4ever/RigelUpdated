@@ -42,12 +42,12 @@ namespace OW {
 		union {
 			OFF_MEMB(XMFLOAT3, velocity, 0x50);
 			OFF_MEMB(XMFLOAT3, location, 0x1B0 + 0x50);
-			OFF_MEMB(uint64_t, bonedata, 0x8A0);
+			OFF_MEMB(uint64_t, bonedata, 0x8B0);
 		};
 	};
 	struct hero_compo_t {
 		union {
-			OFF_MEMB(uint64_t, heroid, 0xD0);
+			OFF_MEMB(uint64_t, heroid, 0xE0);
 		};
 	};
 	struct vis_compo_t {
@@ -61,110 +61,110 @@ namespace OW {
 		switch (HeroID)
 		{
 		case eHero::HERO_REAPER:
-			return skCrypt(u8"ËÀÉñ").decrypt();
+			return (u8"ËÀÉñ");
 		case eHero::HERO_TRACER:
-			return skCrypt(u8"ÁÔ¿Õ").decrypt();
+			return (u8"ÁÔ¿Õ");
 		case eHero::HERO_MERCY:
-			return skCrypt(u8"ÌìÊ¹").decrypt();
+			return (u8"ÌìÊ¹");
 		case eHero::HERO_HANJO:
-			return skCrypt(u8"°ë²Ø").decrypt();
+			return (u8"°ë²Ø");
 		case eHero::HERO_TORBJORN:
-			return skCrypt(u8"ÍÐ±È°º").decrypt();
+			return (u8"ÍÐ±È°º");
 		case eHero::HERO_REINHARDT:
-			return skCrypt(u8"À³Òò¹þÌØ").decrypt();
+			return (u8"À³Òò¹þÌØ");
 		case eHero::HERO_PHARAH:
-			return skCrypt(u8"·¨ÀÏÖ®Ó¥").decrypt();
+			return (u8"·¨ÀÏÖ®Ó¥");
 		case eHero::HERO_WINSTON:
-			return skCrypt(u8"ÎÂË¹¶Ù").decrypt();
+			return (u8"ÎÂË¹¶Ù");
 		case eHero::HERO_WIDOWMAKER:
-			return skCrypt(u8"ºÚ°ÙºÏ").decrypt();
+			return (u8"ºÚ°ÙºÏ");
 		case eHero::HERO_BASTION:
-			return skCrypt(u8"±¤ÀÝ").decrypt();
+			return (u8"±¤ÀÝ");
 		case eHero::HERO_SYMMETRA:
-			return skCrypt(u8"ÖÈÐòÖ®¹â").decrypt();
+			return (u8"ÖÈÐòÖ®¹â");
 		case eHero::HERO_ZENYATTA:
-			return skCrypt(u8"ìøÑÅËþ").decrypt();
+			return (u8"ìøÑÅËþ");
 		case eHero::HERO_GENJI:
-			return skCrypt(u8"Ô´ÊÏ").decrypt();
+			return (u8"Ô´ÊÏ");
 		case eHero::HERO_ROADHOG:
-			return skCrypt(u8"Â·°Ô").decrypt();
+			return (u8"Â·°Ô");
 		case eHero::HERO_MCCREE:
-			return skCrypt(u8"Âó¿ËÀ×").decrypt();
+			return (u8"Âó¿ËÀ×");
 		case eHero::HERO_JUNKRAT:
-			return skCrypt(u8"¿ñÊó").decrypt();
+			return (u8"¿ñÊó");
 		case eHero::HERO_ZARYA:
-			return skCrypt(u8"²éÀòæ«").decrypt();
+			return (u8"²éÀòæ«");
 		case eHero::HERO_SOLDIER76:
-			return skCrypt(u8"Ê¿±ø76").decrypt();
+			return (u8"Ê¿±ø76");
 		case eHero::HERO_LUCIO:
-			return skCrypt(u8"Â¬Î÷°Â").decrypt();
+			return (u8"Â¬Î÷°Â");
 		case eHero::HERO_DVA:
 			if (SDK->RPM<uint16_t>(LinkBase + 0xD4) != SDK->RPM<uint16_t>(LinkBase + 0xD8))
-				return skCrypt(u8"D.Va").decrypt();
+				return (u8"D.Va");
 			else
-				return skCrypt(u8"¹þÄÈ").decrypt();
+				return (u8"¹þÄÈ");
 		case eHero::HERO_VENTURE:
-			return skCrypt(u8"Â¬Î÷°").decrypt();
+			return (u8"Â¬Î÷°");
 		case eHero::HERO_MEI:
-			return skCrypt(u8"ÃÀ").decrypt();
+			return (u8"ÃÀ");
 		case eHero::HERO_ANA:
-			return skCrypt(u8"°²ÄÈ").decrypt();
+			return (u8"°²ÄÈ");
 		case eHero::HERO_SOMBRA:
-			return skCrypt(u8"ºÚÓ°").decrypt();
+			return (u8"ºÚÓ°");
 		case eHero::HERO_ORISA:
-			return skCrypt(u8"°ÂÀöÉ¯").decrypt();
+			return (u8"°ÂÀöÉ¯");
 		case eHero::HERO_DOOMFIST:
-			return skCrypt(u8"Ä©ÈÕÌúÈ ").decrypt();
+			return (u8"Ä©ÈÕÌúÈ ");
 		case eHero::HERO_MOIRA:
-			return skCrypt(u8"ÄªÒÁÀ ").decrypt();
+			return (u8"ÄªÒÁÀ ");
 		case eHero::HERO_BRIGITTE:
-			return skCrypt(u8"²¼Àï¼ªËþ").decrypt();
+			return (u8"²¼Àï¼ªËþ");
 		case eHero::HERO_WRECKINGBALL:
-			return skCrypt(u8"ÆÆ»µÇò").decrypt();
+			return (u8"ÆÆ»µÇò");
 		case eHero::HERO_SOJOURN:
-			return skCrypt(u8"Ë÷½Ü¶÷").decrypt();
+			return (u8"Ë÷½Ü¶÷");
 		case eHero::HERO_ASHE:
-			return skCrypt(u8"°¬Ê²").decrypt();
+			return (u8"°¬Ê²");
 		case eHero::HERO_BAPTISTE:
-			return skCrypt(u8"°ÍµÙË¹ÌØ").decrypt();
+			return (u8"°ÍµÙË¹ÌØ");
 		case eHero::HERO_KIRIKO:
-			return skCrypt(u8"Îí×Ó").decrypt();
+			return (u8"Îí×Ó");
 		case eHero::HERO_JUNKERQUEEN:
-			return skCrypt(u8"Ôü¿ÍÅ®Íõ").decrypt();
+			return (u8"Ôü¿ÍÅ®Íõ");
 		case eHero::HERO_SIGMA:
-			return skCrypt(u8"Î÷¸ñÂê").decrypt();
+			return (u8"Î÷¸ñÂê");
 		case eHero::HERO_ECHO:
-			return skCrypt(u8"»ØÉù").decrypt();
+			return (u8"»ØÉù");
 		case eHero::HERO_RAMATTRA:
-			return skCrypt(u8"À ÂêÉ²").decrypt();
+			return (u8"À ÂêÉ²");
 		case eHero::HERO_TRAININGBOT1:
-			return skCrypt(u8"±ê×¼»úÆ÷ÈË").decrypt();
+			return (u8"±ê×¼»úÆ÷ÈË");
 		case eHero::HERO_TRAININGBOT2:
-			return skCrypt(u8"ÖØ×°»úÆ÷ÈË").decrypt();
+			return (u8"ÖØ×°»úÆ÷ÈË");
 		case eHero::HERO_TRAININGBOT3:
-			return skCrypt(u8"¾Ñ»÷»úÆ÷ÈË").decrypt();
+			return (u8"¾Ñ»÷»úÆ÷ÈË");
 		case eHero::HERO_TRAININGBOT4:
-			return skCrypt(u8"ÓÑ·½»úÆ÷ÈË").decrypt();
+			return (u8"ÓÑ·½»úÆ÷ÈË");
 		case eHero::HERO_TRAININGBOT5:
-			return skCrypt(u8"ÓÑ·½ÖØ×°»úÆ÷ÈË").decrypt();
+			return (u8"ÓÑ·½ÖØ×°»úÆ÷ÈË");
 		case eHero::HERO_TRAININGBOT6:
-			return skCrypt(u8"»ð¼ý»úÆ÷ÈË").decrypt();
+			return (u8"»ð¼ý»úÆ÷ÈË");
 		case eHero::HERO_TRAININGBOT7:
-			return skCrypt(u8"ÑµÁ·»úÆ÷ÈË").decrypt();
+			return (u8"ÑµÁ·»úÆ÷ÈË");
 		case eHero::HERO_LIFEWEAVER:
-			return skCrypt(u8"ÉúÃüÖ®Ëó").decrypt();
+			return (u8"ÉúÃüÖ®Ëó");
 		case eHero::TOBTERT:
-			return skCrypt(u8"ÅÚÌ¨").decrypt();
+			return (u8"ÅÚÌ¨");
 		case eHero::SYMTERT:
-			return skCrypt(u8"ÉãÏñÍ·").decrypt();
+			return (u8"ÉãÏñÍ·");
 		case eHero::HERO_ILLARI:
-			return skCrypt(u8"ÒÁÀ Èñ").decrypt();
+			return (u8"ÒÁÀ Èñ");
 		case eHero::HERO_MAUGA:
-			return skCrypt(u8"Ã«¼Ó").decrypt();
+			return (u8"Ã«¼Ó");
 		case eHero::Bob:
-			return skCrypt(u8"±«²ª").decrypt();
+			return (u8"±«²ª");
 		default:
-			return skCrypt(u8"Î´Öª").decrypt();
+			return (u8"Î´Öª");
 		}
 
 	}
@@ -184,154 +184,155 @@ namespace OW {
 	inline std::string GetHeroEngNames(uint64_t HeroID, uint64_t LinkBase) {
 		switch (HeroID)
 		{
+		case eHero::HERO_JUNO:
+			return (u8"Juno");
 		case eHero::HERO_REAPER:
-			return skCrypt("Reaper").decrypt();
+			return ("Reaper");
 		case eHero::HERO_TRACER:
-			return skCrypt("Tracer").decrypt();
+			return ("Tracer");
 		case eHero::HERO_MERCY:
-			return skCrypt("Mercy").decrypt();
+			return ("Mercy");
 		case eHero::HERO_HANJO:
-			return skCrypt("Hanzo").decrypt();
+			return ("Hanzo");
 		case eHero::HERO_TORBJORN:
-			return skCrypt("Torbjorn").decrypt();
+			return ("Torbjorn");
 		case eHero::HERO_REINHARDT:
-			return skCrypt("Reinhardt").decrypt();
+			return ("Reinhardt");
 		case eHero::HERO_PHARAH:
-			return skCrypt("Pharah").decrypt();
+			return ("Pharah");
 		case eHero::HERO_WINSTON:
-			return skCrypt("Winston").decrypt();
+			return ("Winston");
 		case eHero::HERO_WIDOWMAKER:
-			return skCrypt("Widowmaker").decrypt();
+			return ("Widowmaker");
 		case eHero::HERO_BASTION:
-			return skCrypt("Bastion").decrypt();
+			return ("Bastion");
 		case eHero::HERO_SYMMETRA:
-			return skCrypt("Symmetra").decrypt();
+			return ("Symmetra");
 		case eHero::HERO_ZENYATTA:
-			return skCrypt("Zenyatta").decrypt();
+			return ("Zenyatta");
 		case eHero::HERO_GENJI:
-			return skCrypt("Genji").decrypt();
+			return ("Genji");
 		case eHero::HERO_ROADHOG:
-			return skCrypt("Roadhog").decrypt();
+			return ("Roadhog");
 		case eHero::HERO_MCCREE:
-			return skCrypt("McCree").decrypt();
+			return ("McCree");
 		case eHero::HERO_JUNKRAT:
-			return skCrypt("Junkrat").decrypt();
+			return ("Junkrat");
 		case eHero::HERO_ZARYA:
-			return skCrypt("Zarya").decrypt();
+			return ("Zarya");
 		case eHero::HERO_SOLDIER76:
-			return skCrypt("Soldier 76").decrypt();
+			return ("Soldier 76");
 		case eHero::HERO_LUCIO:
-			return skCrypt("Lucio").decrypt();
+			return ("Lucio");
 		case eHero::HERO_DVA:
 			if (SDK->RPM<uint16_t>(LinkBase + 0xD4) != SDK->RPM<uint16_t>(LinkBase + 0xD8))
-				return skCrypt("D.Va").decrypt();
+				return ("D.Va");
 			else
-				return skCrypt("Hana").decrypt();
+				return ("Hana");
 		case eHero::HERO_MEI:
-			return skCrypt("Mei").decrypt();
+			return ("Mei");
 		case eHero::HERO_ANA:
-			return skCrypt("Ana").decrypt();
+			return ("Ana");
 		case eHero::HERO_SOMBRA:
-			return skCrypt("Sombra").decrypt();
+			return ("Sombra");
 		case eHero::HERO_ORISA:
-			return skCrypt("Orisa").decrypt();
+			return ("Orisa");
 		case eHero::HERO_DOOMFIST:
-			return skCrypt("Doomfist").decrypt();
+			return ("Doomfist");
 		case eHero::HERO_MOIRA:
-			return skCrypt("Moira").decrypt();
+			return ("Moira");
 		case eHero::HERO_BRIGITTE:
-			return skCrypt("Brigitte").decrypt();
+			return ("Brigitte");
 		case eHero::HERO_WRECKINGBALL:
-			return skCrypt("Wrecking Ball").decrypt();
+			return ("Wrecking Ball");
 		case eHero::HERO_SOJOURN:
-			return skCrypt("Sojourn").decrypt();
+			return ("Sojourn");
 		case eHero::HERO_ASHE:
-			return skCrypt("Ashe").decrypt();
+			return ("Ashe");
 		case eHero::HERO_BAPTISTE:
-			return skCrypt("Baptiste").decrypt();
+			return ("Baptiste");
 		case eHero::HERO_KIRIKO:
-			return skCrypt("Kiriko").decrypt();
+			return ("Kiriko");
 		case eHero::HERO_JUNKERQUEEN:
-			return skCrypt("Junker Queen").decrypt();
+			return ("Junker Queen");
 		case eHero::HERO_SIGMA:
-			return skCrypt("Sigma").decrypt();
+			return ("Sigma");
 		case eHero::HERO_ECHO:
-			return skCrypt("Echo").decrypt();
+			return ("Echo");
 		case eHero::HERO_RAMATTRA:
-			return skCrypt("Ramattra").decrypt();
+			return ("Ramattra");
 		case eHero::HERO_TRAININGBOT1:
-			return skCrypt("Standard Bot").decrypt();
+			return ("Standard Bot");
 		case eHero::HERO_TRAININGBOT2:
-			return skCrypt("Tank Bot").decrypt();
+			return ("Tank Bot");
 		case eHero::HERO_TRAININGBOT3:
-			return skCrypt("Sniper Bot").decrypt();
+			return ("Sniper Bot");
 		case eHero::HERO_TRAININGBOT4:
-			return skCrypt("Friend Bot").decrypt();
+			return ("Friend Bot");
 		case eHero::HERO_TRAININGBOT5:
-			return skCrypt(u8"Friend Tank Bot").decrypt();
+			return (u8"Friend Tank Bot");
 		case eHero::HERO_TRAININGBOT6:
-			return skCrypt(u8"Rocket Bot").decrypt();
+			return (u8"Rocket Bot");
 		case eHero::HERO_TRAININGBOT7:
-			return skCrypt(u8"Training Bot").decrypt();
+			return (u8"Training Bot");
 		case eHero::HERO_LIFEWEAVER:
-			return skCrypt("LifeWeaver").decrypt();
+			return ("LifeWeaver");
 		case eHero::TOBTERT:
-			return skCrypt(u8"Tob").decrypt();
+			return (u8"Tob");
 		case eHero::SYMTERT:
-			return skCrypt(u8"Sym").decrypt();
+			return (u8"Sym");
 		case eHero::HERO_ILLARI:
-			return skCrypt(u8"Illari").decrypt();
+			return (u8"Illari");
 		case eHero::HERO_MAUGA:
-			return skCrypt(u8"Mauga").decrypt();
+			return (u8"Mauga");
 		case eHero::HERO_VENTURE:
-			return skCrypt(u8"Venture").decrypt();
+			return (u8"Venture");
 		case eHero::Bob:
-			return skCrypt(u8"Bob").decrypt();
+			return (u8"Bob");
 		default:
-			return skCrypt(u8"Unknown").decrypt();
+			return (u8"Unknown");
 		}
 	}
+	// decryptcomp sig: 48 89 5c 24 ? 48 89 6c 24 ? 56 57 41 56 48 83 ec ? 49 8b f1 49 8b e8
 
-	inline void sub_E8D1A0(_QWORD* a1, __int64* a2, __int64* a3, _DWORD* a4, uint8_t componentid)
-	{
-		*a1 = (uint64_t)1 << (uint64_t)(componentid & 0x3F);
-		*a2 = *a1 - 1;
-		*a3 = componentid;
-		*a4 = componentid / 0x3F;
-	}
-
-		inline uintptr_t DecryptComponent(uint64_t parent, uint8_t idx)
+	inline uintptr_t DecryptComponent(uint64_t Parent, uint8_t Type)
 	{
 		__try {
-			if (parent) {
-				uint64_t v1 = parent;
-				uint64_t v2 = (uint64_t)1 << (idx & 0x3F);
-				uint64_t v3 = v2 - 1;
-				uint64_t v4 = idx & 0x3F;
-				uint64_t v5 = idx / 0x3F;
-				uint64_t v6 = SDK->RPM<uint64_t>(v1 + 8 * v5 + 0x110);
-				uint64_t v7 = (v2 & v6) >> v4;
-				uint64_t v8 = (v3 & v6) - (((v3 & v6) >> 1) & 0x5555555555555555);
-				uint64_t v9 = SDK->RPM<uint64_t>(SDK->RPM<uint64_t>(v1 + 0x80) + 8 * (SDK->RPM<uint8_t>(v5 + v1 + 0x130) + ((0x101010101010101i64 * (((v8 & 0x3333333333333333i64) + ((v8 >> 2) & 0x3333333333333333i64) + (((v8 & 0x3333333333333333i64) + ((v8 >> 2) & 0x3333333333333333i64)) >> 4)) & 0xF0F0F0F0F0F0F0Fi64)) >> 0x38)));
-				uint64_t Key1 = 0xE2E4959F9279A8E3;
-				uint64_t Key2 = 0x4E5065FAE0C0546F;
-				Key1 = SDK->GlobalKey1;
-				Key2 = SDK->GlobalKey2;
+			if (Parent) {
+				const uint64_t a1 = Parent;
 
+				const uint64_t v16 = 1ui64 << (uint64_t)(Type & 0x3F);
+				const uint64_t v15 = v16 - 1ui64;
+				const uint32_t v13 = Type & 0x3F;
+				const uint32_t v17 = Type / 0x3F;
 
+				const uint64_t v8 = SDK->RPM<uint64_t>(a1 + 8i64 * v17 + 0x110);
+				const uint64_t v9 = (v15 & v8) - (((v15 & v8) >> 1) & 0x5555555555555555LL);
 
-				uint64_t D1 = (unsigned int)v9 | v9 & 0xFFFFFFFF00000000uLL ^ ((unsigned __int64)(2 * _rotr(SDK->RPM<uint64_t>(SDK->dwGameBase + 0x390F520 + (Key1 >> 52)), 3) - (unsigned int)v9) << 32);
-				uint64_t d1 = (unsigned int)D1;
-				uint64_t D2 = (unsigned int)D1;
-				D1 &= 0xFFFFFFFF00000000uLL;
-				uint64_t D3 = Key2 ^ (d1 | D1 ^ ((D2 ^ HIDWORD(SDK->RPM<uint64_t>(SDK->dwGameBase + 0x390F520 + (Key1 & 0xFFF)))) << 32));
-				uint64_t D4 = (unsigned int)Key2 ^ ((unsigned int)d1 | (unsigned int)D1);
-				uint64_t D5 = -(int)v7 & ((unsigned int)D4 | (D4 | D3 & 0xFFFFFFFF00000000uLL ^ ((D4 ^ 0x7203E7F5) << 32)) & 0xFFFFFFFF00000000uLL ^ ((unsigned __int64)(unsigned int)(2 * _rotr(HIDWORD(SDK->RPM<uint64_t>(SDK->dwGameBase + 0x390F520 + (Key1 >> 52))), 3) - D4) << 32));
-				if (SDK->RPM<uint8_t>(D5 + 0x10) == idx)
-					return D5;
+				uint64_t v14 = __ROL8__(
+					__ROL8__(
+						SDK->RPM<uint64_t>(SDK->RPM<uint64_t>(a1 + 0x80)
+							+ 8
+							* (SDK->RPM<uint8_t>(v17 + a1 + 0x130)
+								+ ((0x101010101010101i64
+									* (((v9 & 0x3333333333333333i64)
+										+ ((v9 >> 2) & 0x3333333333333333i64)
+										+ (((v9 & 0x3333333333333333LL) + ((v9 >> 2) & 0x3333333333333333i64)) >> 4)) & 0xF0F0F0F0F0F0F0Fi64)) >> 0x38))) ^ SDK->RPM<uint8_t>(SDK->dwGameBase + 0x31BFE18) ^ 0x5952EC877E8DAF4i64,
+						10)
+					- 0x4A32D540542847AAi64,
+					11)
+					- 0x11B49508F72CEF96i64;
+
+				v14 = __ROL8__(v14, 19);
+
+				const uint64_t v10 = (SDK->RPM<uint64_t>(SDK->RPM<uint64_t>(SDK->dwGameBase + 0x348A650) + 0xD7) ^ v14) & (int32_t)(-(int64_t)((v16 & v8) >> v13));
+
+				return v10;
 			}
 		}
-		__except (EXCEPTION_EXECUTE_HANDLER) {}
+		__except (EXCEPTION_EXECUTE_HANDLER) {
+			return NULL;
+		}
 		return NULL;
 	}
  
@@ -339,45 +340,8 @@ namespace OW {
 
 	inline unsigned __int64 __fastcall DecryptVis(unsigned __int64 a1)
 	{
-		unsigned __int64 v2 = 0; // rdi
-		unsigned __int64 v3 = 0; // r8
-		__int64 v4 = 0;             // rbx
-		unsigned __int64 v5 = 0; // rcx
-		unsigned __int64 v6 = 0; // rax
-		unsigned __int64 v7 = 0; // rax
-		__m128i v8;                 // xmm1
-		__m128i v9;                 // xmm2
-		__m128i v10;             // xmm0
-		__m128i v11;             // xmm1
-
-		v2 = (SDK->dwGameBase + 0x7B2C52);
-		v3 = v2 + 0x8;
-		v4 = 0i64;
-		v5 = SDK->RPM<_QWORD>(SDK->dwGameBase + 0x3910540 + 8ull * (((uint8_t)a1 + 0x76) & 0x7F)
-			+ (((unsigned __int64)(a1 - 0x6F2B59A5858139B4) >> 7) & 7)) ^ v2 ^ (a1 - 0x6F2B59A5858139B4);
-		v6 = (v3 - v2 + 7) >> 3;
-		if (v2 > v3)
-			v6 = 0i64;
-		if (v6 >= 4)
-		{
-			v7 = v6 & 0xFFFFFFFFFFFFFFFCui64;
-			ZeroMemory(&v8, sizeof(v8));
-			ZeroMemory(&v9, sizeof(v9));
-			do
-			{
-				v4 += 4i64;
-				v8 = _mm_xor_si128(v8, _mm_loadu_si128((const __m128i*)v2));
-				v10 = _mm_loadu_si128((const __m128i*)(v2 + 0x16));
-				v2 += 0x32i64;
-				v9 = _mm_xor_si128(v9, v10);
-			} while (v4 < v7);
-			v11 = _mm_xor_si128(v8, v9);
-			auto addr = _mm_xor_si128(v11, _mm_srli_si128(v11, 8));
-			v4 = *(__int64*)&addr;
-		}
-		for (; v2 < v3; v2 += 8i64)
-			v4 ^= SDK->RPM<_QWORD>(v2);
-		return v4 ^ ~v3 ^ 0x90D4A65A7A7EC64Ci64;
+		auto v2 = SDK->RPM<uint64_t>(a1 + 0x98);
+		return v2 = 0;
 	}
 
 	enum class HeapManager : uintptr_t
@@ -387,12 +351,14 @@ namespace OW {
 		HeapManagerKey = 0x6DE0CEEB548519C3,
 		HeapManagerPointer = 0x160,
 	};
-	uint64_t GetHeapManager(uint8_t index) {
-		uint64_t v0 = SDK->RPM<uint64_t>(SDK->dwGameBase + offset::HeapManager);
+	inline uintptr_t GetHeapManager(uint8_t index) {
+		uintptr_t v0 = SDK->RPM<uintptr_t>(SDK->dwGameBase + 0x34A4530);
 		if (v0 != 0) {
-			auto v1 = SDK->RPM<uint64_t>(v0 + offset::HeapManager_Pointer) ^ (__ROL8__(SDK->RPM<uint64_t>(SDK->dwGameBase + offset::HeapManager_Var), 2) ^ offset::HeapManager_Key);
+			uintptr_t v1 = (__ROL8__(
+				__ROR8__(SDK->RPM<_QWORD>(v0 + 0x160) + 0x133A2F0FA05E59FLL, 31) + 0x222D7F42D73446F7LL,
+				15) ^ 0xF5EF035545B5E77DuLL);
 			if (v1 != 0) {
-				uint64_t v2 = SDK->RPM<uint64_t>(v1 + 0x8 * index);
+				uintptr_t v2 = SDK->RPM<uintptr_t>(v1 + 0x8 * index);
 				return v2;
 			}
 		}
@@ -436,7 +402,8 @@ namespace OW {
 					if (common_linker)
 					{
 						uint32_t unique_id = SDK->RPM<uint32_t>(common_linker + 0xD4);
-						//printf("unique_id:%llx\n", unique_id);
+						//printf("unique_id:%llx\n", unique_id);	
+						//printf("linker:%llx\n", common_linker);
 						for (size_t x = 0; x < entity_list_size; ++x)
 						{
 							uint64_t possible_common = raw_list[x].entity;
@@ -722,6 +689,7 @@ namespace OW {
 		return NULL;
 	}
 
+
 	uint64_t GetThickNessStruct(uint64_t a1)
 	{
 		__try
@@ -731,7 +699,7 @@ namespace OW {
 			if (v1 <= 0)
 				result = 0;
 			else
-				result = (uint64_t)(0x14 * v1 + SDK->RPM<uint64_t>(a1 + 0x1C0) - 0x14);
+				result = 1;
 
 			return result;
 		}
@@ -741,50 +709,16 @@ namespace OW {
 	}
 	inline uint64_t DecryptOutline(uint64_t a1)
 	{
-		unsigned __int64 v2 = 0; // rdi
-		unsigned __int64 v3 = 0; // r8
-		unsigned __int64 v4 = 0; // rax
-		__int64 v5 = 0;             // rbx
-		unsigned __int64 v6 = 0; // rcx
-		unsigned __int64 v7 = 0; // rcx
-		__m128i v8;                 // xmm1
-		__m128i v9;                 // xmm2
-		__m128i v10;             // xmm0
-		__m128i v11;             // xmm1
-		v2 = (SDK->dwGameBase + 0x7BC962);
-		v3 = v2 + 0x8;
-		v4 = 0i64;
-		v5 = SDK->RPM<uintptr_t>(SDK->dwGameBase + 0x3910540 + 8ull * (((uint8_t)a1 - 0x3C) & 0x7F)
-			+ (((unsigned __int64)(a1 + 0x61A1A52215338EC4) >> 7) & 7)) ^ v2 ^ (a1 + 0x61A1A52215338EC4);
-
-		v6 = 0i64;
-		if (v6 >= 4)
-		{
-			v7 = v6 & 0xFFFFFFFFFFFFFFFCui64;
-			ZeroMemory(&v8, sizeof(v8));
-			ZeroMemory(&v9, sizeof(v9));
-			do
-			{
-				v4 += 4i64;
-				v8 = _mm_xor_si128(v8, _mm_loadu_si128((const __m128i*)v2));
-				v10 = _mm_loadu_si128((const __m128i*)(v2 + 0x10));
-				v2 += 0x20i64;
-				v9 = _mm_xor_si128(v9, v10);
-			} while (v4 < v7);
-			v11 = _mm_xor_si128(v8, v9);
-			auto addr = _mm_xor_si128(v11, _mm_srli_si128(v11, 8));
-			v5 = *(__int64*)&addr;
-		}
-		for (; v2 < v3; v2 += 8i64)
-			v5 ^= SDK->RPM<DWORD_PTR>(v2);
-		return v5 ^ ~v3 ^ 0x61A1A52215338EC4i64;
+		uint64_t result = NULL;
+		int v1 = SDK->RPM<uint32_t>(a1);
+		return v1 = 0;
 	}
 
 	inline void SetBorderLine(uint32_t BorderType, DWORD_PTR base)
 	{
 		uint64_t BorderStruct = GetOutlineStruct((uint64_t)(base + 0x20)); // 0x5A Components + 0x20
 		uint64_t DecryptData = DecryptOutline(SDK->RPM<uint64_t>(BorderStruct + 0x18));
-
-		SDK->WPM<uint32_t>(BorderStruct + 0x10, (DecryptData ^ BorderType));
+		SDK->WPM<uint32_t>(BorderStruct + 0x8, (DecryptData ^ BorderType));
+		SDK->WPM<uint32_t>(BorderStruct + 0x10, (DecryptData ^ BorderType));	
 	}
 }

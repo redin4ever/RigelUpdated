@@ -48,11 +48,11 @@ namespace OW {
 		inline bool Initialize()
 		{
 			DWORD dwPID;
-			Windowsizehd = FindWindowA(skCrypt("TankWindowClass"), NULL);
-			GetWindowThreadProcessId(FindWindowA(skCrypt("TankWindowClass"), NULL), &dwPID);
+			Windowsizehd = FindWindowA(("TankWindowClass"), NULL);
+			GetWindowThreadProcessId(FindWindowA(("TankWindowClass"), NULL), &dwPID);
 
 			hProcess = OpenProcess(PROCESS_ALL_ACCESS, false, dwPID);
-			dwGameBase = GetModuleBaseAddress(dwPID, skCrypt("Overwatch.exe"));
+			dwGameBase = GetModuleBaseAddress(dwPID, ("Overwatch.exe"));
 
 			return dwGameBase;
 		}
@@ -70,6 +70,9 @@ namespace OW {
 				if (Key && Key < 0xf000000000000000 && RPM<uint64_t>(Key - 0xF0) > 0x100000000000000 && RPM<uint64_t>(Key - 0x40) > 0x100000000000000) {
 					GlobalKey2 = RPM<uint64_t>(Key - 0x40);
 					GlobalKey1 = RPM<uint64_t>(Key - 0xF0);
+					std::cout << Key << std::endl;
+					printf("\nGlobalKey1: 0x%llx\n", GlobalKey1);
+					printf("GlobalKey2: 0x%llx\n", GlobalKey2);
 					return true;
 				}
 				Sleep(1000);
